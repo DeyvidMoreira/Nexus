@@ -34,6 +34,7 @@ fun AnimatedBorderCard(
     borderWidth: Dp = 4.dp,
     borderGradient: Brush = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
     animationDuration: Int = 10000,
+    shadowElevation: Dp = 8.dp,
     content: @Composable () -> Unit
 ) {
     // Animação de rotação infinita
@@ -47,9 +48,6 @@ fun AnimatedBorderCard(
         ),
         label = "Degrees"
     )
-
-
-
     Surface(
         modifier = modifier,
         shape = shape
@@ -70,7 +68,10 @@ fun AnimatedBorderCard(
                     drawContent() // Desenha o conteúdo interno do card
                 },
             color = DarkMediumGrey,
-            shape = shape
+            shape = shape,
+            shadowElevation = shadowElevation
+
+
         ) {
             content()
         }
@@ -81,7 +82,10 @@ fun AnimatedBorderCard(
 @Preview
 private fun AnimatedBorderCardPreview() {
     AnimatedBorderCard(
-        modifier = Modifier.fillMaxWidth().height(200.dp).padding(2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(2.dp),
         shape = RoundedCornerShape(30.dp),
         borderWidth = 2.dp,
         borderGradient = Brush.sweepGradient(

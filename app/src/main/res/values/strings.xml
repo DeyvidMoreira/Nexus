@@ -1,31 +1,49 @@
 <resources>
     <string name="app_name">Nexus</string>
+    <!--SingIn-->
+    <string name="title_sing_in">Login</string>
+    <!--Hints-->
+    <string name="hint_email">Email: </string>
+    <string name="hint_password">Senha: </string>
+    <!-- Messages -->
+    <string name="txt_remember_me">Lembre-me</string>
+    <!--Buttons-->
+    <string name="btn_sing_in">Entrar</string>
+    <string name="btn_forgot_password">Esqueceu a senha?</string>
 
-    <string name="hint_username">Nome de Usuário</string>
-    <string name="hint_password">Senha</string>
-    <string name="remember_me">Lembre-me</string>
-    <string name="forgot_password">Esqueceu a senha?</string>
-    <string name="btn_login">Entrar</string>
-    <string name="btn_send_code">Enviar Código</string>
-    <string name="code_confirmation">Confirmação de Código</string>
+    <!-- Password Recovery -->
+    <!-- Títulos -->
+    <string name="txt_title_forgot_password">Esqueceu a senha?</string>
+    <string name="txt_new_password_title">Redefinição de senha</string>
+    <!--Hints-->
+    <string name="hint_send_code">Digite o código enviado para o seu email</string>
+    <!--Messages-->
+    <string name="txt_message_send_email">Será enviado um link para o seu email para redefinir sua senha.</string>
+    <string name="txt_new_password">Crie uma nova senha:</string>
+    <string name="txt_send_code">Enviamos um link para seu e-mail. Verifique sua caixa de entrada!</string>
+    <!--Buttons-->
+    <string name="btn_send_link">Enviar Link</string>
+    <string name="bnt_refresh_password">Atualizar senha</string>
+
+    <!-- Confirmação de Código -->
+    <!--Title-->
+    <string name="title_code_confirmation">Confirmação de Código</string>
+    <!-- Buttons -->
     <string name="btn_confirm_code">Confirmar Código</string>
-    <string name="register">Registrar-se</string>
-    <string name="account_create">Criar uma conta no Nexus</string>
-    <string name="hint_username_register">Digite um nome de Usuário</string>
-    <string name="hint_password_register">Digite uma senha: </string>
-    <string name="hint_repeat_password">Repita a senha: </string>
-    <string name="btn_new_account">Criar conta </string>
-    <string name="hint_user_email">Digite seu email: </string>
-    <string name="hint_email_request">Digite seu email que você registrou no Nexus:</string>
-    <string name="hint_send_code"> Digite o código enviado para o seu email</string>
-    <string name="txt_message_send_email"> Sera enviado um código para o seu email para redefinir sua senha.</string>
-    <string name="txt_code_confirmation"> Enviamos um código para o seu email, para redefinir sua senha.</string>
-    <string name="new_password_title">Redefinição de senha</string>
-    <string name="txt_new_password"> Crie uma nova senha:</string>
-    <string name="bnt_refresh_password"> Atualizar senha</string>
-    <string name="hint_first_name"> Digite seu nome: </string>
-    <string name="hint_surname"> Digite seu sobrenome: </string>
-    <string name="txt_send_code"> Enviamos um código para seu e-mail. Verifique sua caixa de entrada! </string>
 
+    <!-- SingUP -->
+    <string name="txt_account_create">Criar uma conta no Nexus</string>
+    <string name="txt_sing_up">Registrar-se</string>
+    <!--Hints-->
+    <string name="hint_username_register">Digite um nome de Usuário</string>
+    <string name="hint_password_register">Digite uma senha:</string>
+    <string name="hint_repeat_password">Repita a senha:</string>
+    <string name="hint_user_email">Digite seu email:</string>
+    <string name="hint_email_request">Digite seu email de registro no Nexus:</string>
+    <string name="hint_first_name">Digite seu nome:</string>
+    <string name="hint_surname">Digite seu sobrenome:</string>
+    <!-- Buttons -->
+    <string name="btn_register">Registrar-se</string>
+    <string name="btn_new_account">Criar conta</string>
 
 </resources>

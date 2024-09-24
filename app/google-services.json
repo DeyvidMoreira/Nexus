@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "265014575932",
+    "project_id": "nexus-69498",
+    "storage_bucket": "nexus-69498.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265014575932:android:04e9b903b6ef758c805439",
+        "android_client_info": {
+          "package_name": "com.example.nexus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdsh8eKcyVVJaQixbNyvTX4bwhalcrjL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

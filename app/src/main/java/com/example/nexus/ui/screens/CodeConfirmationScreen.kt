@@ -40,7 +40,7 @@ fun CodeConfirmationScreen(navController: NavController) {
 
     ColumnBackgroundColor {
         TextCustom(
-            text = stringResource(id = R.string.code_confirmation),
+            text = "",
             fontSize = 22.sp
         )
         SpacerCustom(
@@ -61,7 +61,7 @@ fun CodeConfirmationScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextCustom(
-                    text = stringResource(id = R.string.txt_code_confirmation),
+                    text = "",
                     fontSize = 18.sp
                 )
                 SpacerCustom(

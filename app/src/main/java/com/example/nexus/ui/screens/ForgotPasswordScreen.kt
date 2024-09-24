@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
+import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.NeonGreen
 import com.example.nexus.ui.theme.components.AnimatedBorderCard
@@ -33,18 +35,26 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
+/**
+ * Função composable para a tela de esqueci a senha.
+ * Permite que o usuário solicite a redefinição da senha fornecendo o email.
+ *
+ * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
+ */
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
-    var userEmail by remember { mutableStateOf("") }
+    var userEmail by rememberSaveable { mutableStateOf("") }
 
     ColumnBackgroundColor {
+        // Título
         TextCustom(
-            text = stringResource(id = R.string.forgot_password),
+            text = stringResource(id = R.string.txt_title_forgot_password),
             fontSize = 22.sp
         )
-        SpacerCustom(
-            paddingBottom = 50.dp
-        )
+
+        SpacerCustom(paddingBottom = 50.dp)
+
+        // Cartão com borda animada contendo o formulário de solicitação
         AnimatedBorderCard(
             modifier = Modifier
                 .width(300.dp)
@@ -54,40 +64,52 @@ fun ForgotPasswordScreen(navController: NavController) {
             borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
             animationDuration = 5000
         ) {
+            // Conteúdo do formulário
             Column(
                 modifier = Modifier.padding(all = 24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Mensagem de instrução
                 TextCustom(
                     text = stringResource(id = R.string.txt_message_send_email),
                     fontSize = 18.sp
                 )
-                SpacerCustom(
-                    paddingBottom = 30.dp
-                )
+
+                SpacerCustom(paddingBottom = 30.dp)
+
+                // Campo de entrada para o email
                 TextFieldCustom(
                     value = userEmail,
-                    onValueChange = {
-                        userEmail = it
-                    },
+                    onValueChange = { userEmail = it },
                     hint = stringResource(id = R.string.hint_email_request),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email
                     ),
                     icon = R.drawable.icon_email
                 )
-                SpacerCustom(
-                    paddingBottom = 30.dp
-                )
+
+                SpacerCustom(paddingBottom = 30.dp)
+
+                // Botão para enviar o link de redefinição
                 ButtomCustom(
                     onClick = {
+                        val error = InputValidation.validateEmail(userEmail)
+                        if (error == null) {
+                            // Lógica para enviar o email de redefinição
+                        } else {
+                            // Exibir mensagem de erro
+                        }
                     }
-                ){}
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.btn_send_link),
+                        color = DarkGrey
+                    )
+                }
             }
         }
     }
-
 }
 
 @Preview
