@@ -94,8 +94,17 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
 
     //Google Icon Packs
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Koin para Android (inclui ViewModel e compatibilidade com Jetpack Compose)
+    implementation ("io.insert-koin:koin-android:3.4.0")
+    // Koin para Jetpack Compose (se necessário)
+    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
+
+    // Koin para testes
+    testImplementation ("io.insert-koin:koin-test:3.4.0")
 
 }

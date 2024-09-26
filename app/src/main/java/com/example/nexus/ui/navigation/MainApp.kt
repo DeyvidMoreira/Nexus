@@ -9,10 +9,10 @@ import com.example.nexus.ui.screens.DashboardScreen
 import com.example.nexus.ui.screens.Test1
 import com.example.nexus.ui.screens.Test2
 import com.example.nexus.ui.screens.Test3
+import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.theme.screens.ForgotPasswordScreen
-import com.example.nexus.ui.theme.screens.NewPassowordScreen
+import com.example.nexus.ui.theme.screens.SignUpScreen
 import com.example.nexus.ui.theme.screens.SingInScreen
-import com.example.nexus.ui.theme.screens.SingUpScreen
 
 
 object MainAppRoute {
@@ -30,8 +30,8 @@ fun MainApp() {
     NavHost(navController = navController, startDestination = MainAppRoute.AUTH) {
 
         // Authentication Flow
-        navigation(startDestination = AuthNavigationGraph.SING_IN, route = MainAppRoute.AUTH) {
-            composable(AuthNavigationGraph.SING_IN) {
+        navigation(startDestination = AuthNavigationGraph.SIGN_IN, route = MainAppRoute.AUTH) {
+            composable(AuthNavigationGraph.SIGN_IN) {
                 SingInScreen(navController) {
                     // After login, navigate to the main flow
                     navController.navigate(MainAppRoute.MAIN) {
@@ -39,7 +39,9 @@ fun MainApp() {
                     }
                 }
             }
-            composable(AuthNavigationGraph.SING_UP) { SingUpScreen(navController) }
+            composable(AuthNavigationGraph.SIGN_UP) {
+                SignUpScreen(uiState = SignUpUiState(), {})
+            }
             composable(AuthNavigationGraph.FORGOT_PASSWORD) { ForgotPasswordScreen(navController) }
         }
 

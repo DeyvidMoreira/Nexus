@@ -1,7 +1,11 @@
 package com.example.nexus.ui.theme.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -9,10 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
 import com.example.nexus.ui.navigation.AuthNavigationGraph
+import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.MatteGreen
@@ -40,6 +41,7 @@ import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
+
 /**
  * Função composable para a tela de cadastro.
  * Permite que o usuário crie uma nova conta fornecendo as informações necessárias.
@@ -47,15 +49,31 @@ import com.example.nexus.ui.theme.components.TextFieldCustom
  * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
  */
 @Composable
-fun SingUpScreen(navController: NavController) {
-
-    // Variáveis de estado para armazenar a entrada do usuário
-    var username by rememberSaveable { mutableStateOf("") }
-    var userEmail by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var repeatPassword by rememberSaveable { mutableStateOf("") }
-
+fun SignUpScreen(
+    uiState: SignUpUiState,
+    onSignUpClick: () -> Unit
+) {
     ColumnBackgroundColor {
+        //Mensagem de erro de registro
+        AnimatedVisibility(visible = uiState.error != null) {
+            uiState.error?.let {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.Red)
+                ) {
+                    Text(
+                        text = it,
+                        color = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
+        }
 
         // Título com estilo gradiente
         Text(
@@ -103,8 +121,8 @@ fun SingUpScreen(navController: NavController) {
 
                 // Campo de entrada para o nome de usuário
                 TextFieldCustom(
-                    value = username,
-                    onValueChange = { username = it },
+                    value = uiState.user,
+                    onValueChange = uiState.onUserChange,
                     hint = stringResource(id = R.string.hint_first_name),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -115,8 +133,8 @@ fun SingUpScreen(navController: NavController) {
 
                 // Campo de entrada para o email do usuário
                 TextFieldCustom(
-                    value = userEmail,
-                    onValueChange = { userEmail = it },
+                    value = uiState.email,
+                    onValueChange = uiState.onEmailChange,
                     hint = stringResource(id = R.string.hint_user_email),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email
@@ -128,8 +146,8 @@ fun SingUpScreen(navController: NavController) {
 
                 // Campo de entrada para a senha
                 TextFieldCustom(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = uiState.password,
+                    onValueChange = uiState.onPasswordChange,
                     hint = stringResource(id = R.string.hint_password_register),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.NumberPassword
@@ -142,8 +160,8 @@ fun SingUpScreen(navController: NavController) {
 
                 // Campo de entrada para repetir a senha
                 TextFieldCustom(
-                    value = repeatPassword,
-                    onValueChange = { repeatPassword = it },
+                    value = uiState.confirmPassword,
+                    onValueChange = uiState.onConfirmPasswordChange,
                     hint = stringResource(id = R.string.hint_repeat_password),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.NumberPassword
@@ -156,7 +174,7 @@ fun SingUpScreen(navController: NavController) {
 
                 // Botão para criar nova conta
                 ButtomCustom(
-                    onClick = { navController.navigate(AuthNavigationGraph.SING_IN) }
+                    onClick = onSignUpClick
                 ) {
                     Text(
                         text = stringResource(id = R.string.btn_new_account),
@@ -168,12 +186,20 @@ fun SingUpScreen(navController: NavController) {
     }
 }
 
-@Preview
+@Preview(name = "Default")
 @Composable
-private fun SingUpScreenScreenPreview() {
-    val navController = rememberNavController()
-    SingUpScreen(navController)
+private fun SingUpScreenPreview() {
+    val uiState = SignUpUiState()
+    SignUpScreen(uiState, {})
 }
 
 
+@Preview(name = "With Error")
+@Composable
+private fun SingUpScreen1Preview() {
+    SignUpScreen(
+        uiState = SignUpUiState(error = "Error"),
+        {}
+    )
+}
 

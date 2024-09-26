@@ -182,7 +182,7 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                 SpacerCustom(paddingBottom = 25.dp)
 
                 // Botão para navegar para a tela de cadastro
-                TextButtonCustom(onClick = { navController.navigate(AuthNavigationGraph.SING_UP) }) {
+                TextButtonCustom(onClick = { navController.navigate(AuthNavigationGraph.SIGN_UP) }) {
                     TextCustom(
                         text = stringResource(id = R.string.btn_register),
                         fontSize = 14.sp
