@@ -74,6 +74,7 @@ fun SignUpScreen(
                 }
             }
         }
+        SpacerCustom(paddingBottom = 16.dp)
 
         // Título com estilo gradiente
         Text(

@@ -1,15 +1,15 @@
 package com.example.nexus.ui.states
 
 data class SignUpUiState (
-    val user: String = "",
-    val email: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val onUserChange: (String) -> Unit = {},
-    val onEmailChange: (String) -> Unit = {},
-    val onPasswordChange: (String) -> Unit = {},
-    val onConfirmPasswordChange: (String) -> Unit = {},
-    val onSignUpClick: () -> Unit = {},
-    val isLoading: Boolean = false,
-    val error: String? = null
+    var user: String = "",
+    var email: String = "",
+    var password: String = "",
+    var confirmPassword: String = "",
+    var onUserChange: (String) -> Unit = {},
+    var onEmailChange: (String) -> Unit = {},
+    var onPasswordChange: (String) -> Unit = {},
+    var onConfirmPasswordChange: (String) -> Unit = {},
+    var onSignUpClick: () -> Unit = {},
+    var isLoading: Boolean = false,
+    var error: String? = null
 )

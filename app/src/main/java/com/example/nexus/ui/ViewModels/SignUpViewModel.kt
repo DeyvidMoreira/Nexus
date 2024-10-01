@@ -23,9 +23,15 @@ class SignUpViewModel(
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                onEmailChange = { user ->
+                onUserChange = { user ->
                     _uiState.update {
-                        it.copy(email = user)
+                        it.copy(user = user)
+                    }
+
+                },
+                onEmailChange = { email ->
+                    _uiState.update {
+                        it.copy(email = email)
                     }
                 },
                 onPasswordChange = { password ->

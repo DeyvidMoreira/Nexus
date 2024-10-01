@@ -39,8 +39,12 @@ fun MainApp() {
                     }
                 }
             }
-            composable(AuthNavigationGraph.SIGN_UP) {
-                SignUpScreen(uiState = SignUpUiState(), {})
+            // Chame a função signUpNavigation aqui
+            signUpNavigation {
+                // Se precisar navegar para a tela de login após o cadastro, pode passar a função de navegação aqui
+                navController.navigate(AuthNavigationGraph.SIGN_IN) {
+                    popUpTo(AuthNavigationGraph.SIGN_IN) { inclusive = true }
+                }
             }
             composable(AuthNavigationGraph.FORGOT_PASSWORD) { ForgotPasswordScreen(navController) }
         }
