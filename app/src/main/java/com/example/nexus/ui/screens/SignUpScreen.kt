@@ -165,6 +165,11 @@ fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
                     hint = stringResource(id = R.string.hint_repeat_password),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
+                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                    showTrailingIcon = false,
+                    onTrailingIconClick = {
+                        passwordVisibility = !passwordVisibility
+                    },
                     iconContentDescripition = "Alternar visibilidade da senha"
                 )
                 SpacerCustom(paddingBottom = 20.dp)
