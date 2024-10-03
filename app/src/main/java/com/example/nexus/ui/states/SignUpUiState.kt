@@ -11,5 +11,6 @@ data class SignUpUiState (
     var onConfirmPasswordChange: (String) -> Unit = {},
     var onSignUpClick: () -> Unit = {},
     var isLoading: Boolean = false,
+    var isPasswordVisible: Boolean = false,
     var error: String? = null
 )

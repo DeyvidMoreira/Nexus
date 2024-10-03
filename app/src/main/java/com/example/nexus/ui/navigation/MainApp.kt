@@ -9,9 +9,7 @@ import com.example.nexus.ui.screens.DashboardScreen
 import com.example.nexus.ui.screens.Test1
 import com.example.nexus.ui.screens.Test2
 import com.example.nexus.ui.screens.Test3
-import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.theme.screens.ForgotPasswordScreen
-import com.example.nexus.ui.theme.screens.SignUpScreen
 import com.example.nexus.ui.theme.screens.SingInScreen
 
 

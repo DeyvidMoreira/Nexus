@@ -1,4 +1,4 @@
-package com.example.nexus.ui.theme.screens
+package com.example.nexus.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -13,6 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -23,13 +27,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
-import com.example.nexus.ui.navigation.AuthNavigationGraph
 import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
@@ -46,13 +48,10 @@ import com.example.nexus.ui.theme.components.TextFieldCustom
  * Função composable para a tela de cadastro.
  * Permite que o usuário crie uma nova conta fornecendo as informações necessárias.
  *
- * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
  */
 @Composable
-fun SignUpScreen(
-    uiState: SignUpUiState,
-    onSignUpClick: () -> Unit
-) {
+fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
+    var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     ColumnBackgroundColor {
         //Mensagem de erro de registro
         AnimatedVisibility(visible = uiState.error != null) {
@@ -93,7 +92,6 @@ fun SignUpScreen(
                 )
             )
         )
-
         SpacerCustom(paddingBottom = 50.dp)
 
         // Cartão com borda animada contendo o formulário de cadastro
@@ -117,7 +115,6 @@ fun SignUpScreen(
                     text = stringResource(id = R.string.txt_sing_up),
                     fontSize = 20.sp
                 )
-
                 SpacerCustom(paddingBottom = 10.dp)
 
                 // Campo de entrada para o nome de usuário
@@ -129,7 +126,6 @@ fun SignUpScreen(
                         keyboardType = KeyboardType.Text
                     )
                 )
-
                 SpacerCustom(paddingBottom = 8.dp)
 
                 // Campo de entrada para o email do usuário
@@ -142,7 +138,6 @@ fun SignUpScreen(
                     ),
                     icon = R.drawable.icon_email
                 )
-
                 SpacerCustom(paddingBottom = 8.dp)
 
                 // Campo de entrada para a senha
@@ -150,13 +145,17 @@ fun SignUpScreen(
                     value = uiState.password,
                     onValueChange = uiState.onPasswordChange,
                     hint = stringResource(id = R.string.hint_password_register),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                    showTrailingIcon = true,
+                    onTrailingIconClick = {
+                        passwordVisibility = !passwordVisibility
+                    },
+                    trailingIcon = if (passwordVisibility) R.drawable.icon_visibility
+                    else R.drawable.icon_visibility_off,
+                    iconContentDescripition = "Alternar visibilidade da senha"
                 )
-
                 SpacerCustom(paddingBottom = 8.dp)
 
                 // Campo de entrada para repetir a senha
@@ -164,13 +163,10 @@ fun SignUpScreen(
                     value = uiState.confirmPassword,
                     onValueChange = uiState.onConfirmPasswordChange,
                     hint = stringResource(id = R.string.hint_repeat_password),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
-                    visualTransformation = PasswordVisualTransformation()
+                    iconContentDescripition = "Alternar visibilidade da senha"
                 )
-
                 SpacerCustom(paddingBottom = 20.dp)
 
                 // Botão para criar nova conta
@@ -191,7 +187,7 @@ fun SignUpScreen(
 @Composable
 private fun SingUpScreenPreview() {
     val uiState = SignUpUiState()
-    SignUpScreen(uiState, {})
+    SignUpScreen(uiState) {}
 }
 
 
@@ -199,8 +195,7 @@ private fun SingUpScreenPreview() {
 @Composable
 private fun SingUpScreen1Preview() {
     SignUpScreen(
-        uiState = SignUpUiState(error = "Error"),
-        {}
-    )
+        uiState = SignUpUiState(error = "Error")
+    ) {}
 }
 

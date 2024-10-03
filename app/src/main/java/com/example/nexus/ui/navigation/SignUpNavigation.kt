@@ -2,7 +2,7 @@ package com.example.nexus.ui.navigation
 
 
 import com.example.nexus.ui.ViewModels.SignUpViewModel
-import com.example.nexus.ui.theme.screens.SignUpScreen
+import com.example.nexus.ui.screens.SignUpScreen
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
