@@ -90,13 +90,15 @@ class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository
     }
 
     //Função para obter a mensagem de erro de validação correspondente
-    private fun getValidationErrorMessage(validationError: ValidationError): String {
-        return when (validationError) {
-            ValidationError.INVALID_NAME -> "Nome inválido"
-            ValidationError.INVALID_EMAIL -> "Email inválido"
-            ValidationError.INVALID_PASSWORD -> "Senha inválida"
-            ValidationError.EMPTY_FIELDS -> "Preencha todos os campos."
-            ValidationError.DIFFERENT_PASSWORDS -> "As senhas não coincidem."
+    fun getValidationErrorMessage(error: ValidationError): String {
+        return when (error) {
+            ValidationError.PASSWORD_EMPTY -> "A senha não pode ser vazia"
+            ValidationError.PASSWORD_TOO_SHORT -> "A senha deve ter pelo menos 8 caracteres"
+            ValidationError.PASSWORD_NO_UPPERCASE -> "A senha deve ter pelo menos uma letra maiúscula"
+            ValidationError.PASSWORD_NO_LOWERCASE -> "A senha deve ter pelo menos uma letra minúscula"
+            ValidationError.PASSWORD_NO_NUMBER -> "A senha deve ter pelo menos um número"
+            ValidationError.PASSWORDS_DO_NOT_MATCH -> "As senhas não coincidem"
+            else -> "Erro desconhecido"
         }
     }
 

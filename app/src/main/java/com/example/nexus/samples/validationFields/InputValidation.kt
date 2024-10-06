@@ -41,13 +41,22 @@ object InputValidation {
      * @return [ValidationError.INVALID_PASSWORD] if the password is invalid, null otherwise.
      */
     fun validatePassword(password: String): ValidationError? {
-        if (password.length < 6 || password.length > 6) {
-            return ValidationError.INVALID_PASSWORD
+        if (password.isEmpty()) {
+            return ValidationError.PASSWORD_EMPTY
         }
-        if (!password.matches(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+\$"))) {
-            return ValidationError.INVALID_PASSWORD
+        if (password.length < 8) {
+            return ValidationError.PASSWORD_TOO_SHORT
         }
-        return null
+        if (!password.matches(".*[A-Z].*".toRegex())) {
+            return ValidationError.PASSWORD_NO_UPPERCASE
+        }
+        if (!password.matches(".*[a-z].*".toRegex())) {
+            return ValidationError.PASSWORD_NO_LOWERCASE
+        }
+        if (!password.matches(".*[0-9].*".toRegex())) {
+            return ValidationError.PASSWORD_NO_NUMBER
+        }
+        return null // Senha válida
     }
 
     /**
@@ -56,9 +65,10 @@ object InputValidation {
      * @param repeatPassword The repeated password.
      * @return [ValidationError.DIFFERENT_PASSWORDS] if the passwords do not match, null otherwise.
      */
-    fun validateRepeatPassword(password: String, repeatPassword: String): ValidationError? {
-        if (password != repeatPassword) {
-            return ValidationError.DIFFERENT_PASSWORDS
+
+    fun validateRepeatPassword(password: String?, confirmPassword: String?): ValidationError? {
+        if (password != confirmPassword) {
+            return ValidationError.PASSWORDS_DO_NOT_MATCH
         }
         return null
     }
