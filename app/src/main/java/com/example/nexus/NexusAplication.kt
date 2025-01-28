@@ -3,6 +3,7 @@ package com.example.nexus
 import android.app.Application
 import com.example.nexus.core.di.appModule
 import com.example.nexus.core.di.firebaseModule
+import com.example.nexus.core.di.localStorageModule
 import com.example.nexus.core.di.storangeModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,6 +20,7 @@ class NexusAplication: Application()  {
             modules(
                 appModule,
                 storangeModule,
+                localStorageModule,
                 firebaseModule
             )
         }

@@ -2,20 +2,20 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
+    alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
-
 }
 
 android {
     namespace = "com.example.nexus"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.nexus"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -45,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -53,6 +53,7 @@ android {
         }
     }
 }
+
 
 dependencies {
 
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,9 +75,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Navigation Compose
-    implementation ("androidx.navigation:navigation-compose:2.8.0")
-    implementation("androidx.compose.material:material:1.7.1")
-
+    implementation (libs.androidx.navigation.compose)
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.material:material:1.7.6")
 
     val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
     implementation(composeBom)
@@ -84,28 +86,30 @@ dependencies {
     implementation(libs.ui.tooling.preview)
 
     //Room DataBase
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
-    kapt ("androidx.room:room-compiler:2.6.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation(libs.androidx.room.runtime)
+    implementation (libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
-    implementation ("com.google.firebase:firebase-auth")
-    implementation ("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
+    //noinspection UseTomlInstead
+    implementation(platform(libs.firebase.bom))
+    implementation (libs.firebase.auth)
+    implementation (libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
+    implementation(libs.google.firebase.auth)
 
     //Google Icon Packs
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.material.icons.extended)
 
     // Koin para Android (inclui ViewModel e compatibilidade com Jetpack Compose)
+    //noinspection UseTomlInstead
     implementation ("io.insert-koin:koin-android:3.4.0")
     // Koin para Jetpack Compose (se necessário)
-    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
+    implementation (libs.koin.androidx.compose)
 
     // Koin para testes
-    testImplementation ("io.insert-koin:koin-test:3.4.0")
+    testImplementation (libs.koin.test)
 
 }

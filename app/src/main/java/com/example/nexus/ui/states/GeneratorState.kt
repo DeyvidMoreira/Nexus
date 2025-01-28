@@ -1,0 +1,20 @@
+package com.example.nexus.ui.states
+
+data class GeneratorState(
+    val upperChecked: Boolean = false,
+    val onUpperChange: (Boolean) -> Unit = {},
+    val lowChecked: Boolean = false,
+    val onLowChange: (Boolean) -> Unit = {},
+    val numChecked: Boolean = false,
+    val onNumChange: (Boolean) -> Unit = {},
+    val especialChecked: Boolean = false,
+    val onEspecialChange: (Boolean) -> Unit = {},
+    val passwordLength: Int = 0,
+    val passwordLengthChange: (Int) -> Unit = {},
+    val sliderValue: Float = 8f,
+    val sliderValueChange: (Float) -> Unit = {},
+    val generatedPassword: String? = null,
+    val onGeneratePassword: () -> Unit = {},
+    val generatePassword: () -> Unit = {},
+    val errorMessage: String? = null
+)

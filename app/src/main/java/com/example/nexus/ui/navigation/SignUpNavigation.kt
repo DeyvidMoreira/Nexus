@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.compose.runtime.getValue
+import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

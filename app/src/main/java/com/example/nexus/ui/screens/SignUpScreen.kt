@@ -44,11 +44,6 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
-/**
- * Função composable para a tela de cadastro.
- * Permite que o usuário crie uma nova conta fornecendo as informações necessárias.
- *
- */
 @Composable
 fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }

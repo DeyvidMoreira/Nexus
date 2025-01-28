@@ -36,9 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
-import com.example.nexus.core.service.model.UserModel
+import com.example.nexus.framework.service.remote.entity.UserModel
 import com.example.nexus.ui.components.TextButtonCustom
-import com.example.nexus.ui.navigation.AuthNavigationGraph
+import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.MatteGreen

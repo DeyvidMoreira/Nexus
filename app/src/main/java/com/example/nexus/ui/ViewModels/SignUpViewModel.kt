@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.nexus.core.service.repository.local.ValidationError
 import com.example.nexus.core.service.repository.local.validationFields.InputValidation
-import com.example.nexus.service.repositories.remote.FirebaseAuthRepository
+import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.SignUpUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.update
 class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val iuState = _uiState.asStateFlow()
+
     private val _signUpIsSuccessful = MutableSharedFlow<Boolean>()
     val signUpIsSuccessful = _signUpIsSuccessful.asSharedFlow()
 

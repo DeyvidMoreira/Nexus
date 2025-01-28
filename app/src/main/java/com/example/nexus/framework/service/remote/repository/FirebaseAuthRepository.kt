@@ -1,4 +1,4 @@
-package com.example.nexus.service.repositories.remote
+package com.example.nexus.framework.service.remote.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
