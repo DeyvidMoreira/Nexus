@@ -18,10 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.until.toFormattedDate
 import com.example.nexus.framework.service.local.until.toFormattedTime
+import com.example.nexus.ui.theme.DarkGrey
+import com.example.nexus.ui.theme.components.SpacerCustom
+import com.example.nexus.ui.theme.components.TextCustom
 
 @Composable
 fun PasswordItem(
@@ -34,35 +38,36 @@ fun PasswordItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface,
+                color = DarkGrey,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
         ) {
-            Text(
-                text = "Tag: ${password.tag}",
+            TextCustom(
+                text = password.tag,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "Senha: ${password.password}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+            TextCustom(
+                text = password.password,
+                style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Criado em: ${password.createdAt.toFormattedDate()}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-            )
-            Text(
-                text = "Hora: ${password.createdAt.toFormattedTime()}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
+            Row {
+                TextCustom(
+                    text = "Data: ${password.createdAt.toFormattedDate()}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                SpacerCustom(paddingEnd = 32.dp)
+                TextCustom(
+                    text = "Hora: ${password.createdAt.toFormattedTime()}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
         IconButton(onClick = { onDelete(password) }) {
             Icon(
@@ -72,4 +77,17 @@ fun PasswordItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun PasswordItemPreview(){
+    val password = PasswordEntity(
+        id = 1,
+        tag = "Exemplo",
+        password = "senha123",
+        createdAt = System.currentTimeMillis()
+    )
+    PasswordItem(password = password, onDelete = {})
+
 }

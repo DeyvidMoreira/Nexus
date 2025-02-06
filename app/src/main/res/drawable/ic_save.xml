@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Corpo principal do disquete -->
+    <path
+        android:fillColor="#06D6A0"
+        android:pathData="M5,3C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3H5ZM5,5H19V13H16V9H8V13H5V5Z" />
+
+    <!-- Parte metálica deslizante -->
+    <path
+        android:fillColor="#71F29C"
+        android:pathData="M16,7H8V5H16V7Z" />
+
+    <!-- Detalhe do label -->
+    <path
+        android:fillColor="#06D6A0"
+        android:pathData="M11,11H13V15H11V11Z" />
+
+    <!-- Furo de proteção (opcional) -->
+    <path
+        android:fillColor="#71F29C"
+        android:pathData="M16,15C16,15.55 16.45,16 17,16C17.55,16 18,15.55 18,15C18,14.45 17.55,14 17,14C16.45,14 16,14.45 16,15Z" />
+
+</vector>

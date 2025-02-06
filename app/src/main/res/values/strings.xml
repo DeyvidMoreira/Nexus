@@ -17,6 +17,8 @@
     <string name="generate_button">Gerar Senha</string>
     <string name="save_button">Salvar Senha</string>
     <string name="show_button">Senhas Salvas </string>
+    <string name="search_password">Pesquisar senha: </string>
+    <string name="no_passwords_found">Nenhuma senha encontrada.</string>
 
     <!-- Password Recovery -->
     <!-- Títulos -->

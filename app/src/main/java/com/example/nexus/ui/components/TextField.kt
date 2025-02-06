@@ -41,7 +41,8 @@ fun TextFieldCustom(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     showTrailingIcon: Boolean = false,
     onTrailingIconClick:(() -> Unit)? = null,
-    trailingIcon: Int? = null
+    trailingIcon: Int? = null,
+
 
 
 ) {

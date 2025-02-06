@@ -9,4 +9,9 @@ object ConstantsCharacters {
     const val NUMBERS = "0123456789"
     const val SPECIAL_CHARACTERS = "!@#$%^&*()_+-=[]{}|;:,.<>?"
     const val STEPS_NUMBERS = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20"
+
+    const val UPPER_CASE_NAME = "upper"
+    const val LOWER_CASE_NAME = "lower"
+    const val NUMBERS_NAME = "numbers"
+    const val SPECIAL_CHARACTERS_NAME = "special"
 }

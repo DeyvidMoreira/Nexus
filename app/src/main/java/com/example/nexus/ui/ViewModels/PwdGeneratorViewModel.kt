@@ -80,7 +80,7 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
         _state.update { currentState ->
             currentState.copy(
                 generatedPassword = password,
-                errorMessage = null
+                warningMessage = null
             )
         }
     }
@@ -105,7 +105,10 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
                         password = _state.value.generatedPassword ?: ""
                     )
                 )
-                setError(ConstantsMessages.MESSAGE_PASSWORD_SAVED)
+                _state.update { currentState ->
+                    currentState.copy(isPasswordSaved = true)
+                }
+                setError(ConstantsMessages.MESSAGE_PASSWORD_SAVED,)
             } catch (e: Exception) {
                 Log.e("PwdGeneratorViewModel", ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED, e)
                 setError(ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED)
@@ -127,13 +130,13 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
 
     private fun setError(message: String?) {
         _state.update { currentState ->
-            currentState.copy(errorMessage = message)
+            currentState.copy(warningMessage = message)
         }
         message?.let {
             viewModelScope.launch {
                 delay(3000) // Aguarda 3 segundos
                 _state.update { currentState ->
-                    currentState.copy(errorMessage = null)
+                    currentState.copy(warningMessage = null)
                 }
             }
         }

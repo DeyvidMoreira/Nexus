@@ -77,10 +77,9 @@ dependencies {
     //Navigation Compose
     implementation (libs.androidx.navigation.compose)
     //noinspection UseTomlInstead
-    implementation("androidx.compose.material:material:1.7.6")
+    implementation("androidx.compose.material:material:1.7.7")
 
-    val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
-    implementation(composeBom)
+    implementation(platform(libs.androidx.compose.bom.v20250101))
 
     debugImplementation(libs.ui.tooling)
     implementation(libs.ui.tooling.preview)
@@ -111,5 +110,8 @@ dependencies {
 
     // Koin para testes
     testImplementation (libs.koin.test)
+
+    //Material Icons
+    implementation(libs.material.icons.extended)
 
 }

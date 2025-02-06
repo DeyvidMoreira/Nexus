@@ -1,5 +1,7 @@
 package com.example.nexus.ui.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -16,6 +18,7 @@ import com.example.nexus.ui.components.PasswordModalBottomSheet
 import com.example.nexus.ui.components.SavePasswordDialog
 import com.example.nexus.ui.navigation.routes.MainNavigationGraph
 import com.example.nexus.ui.screens.PasswordGeneratorScreen
+import com.example.nexus.ui.theme.DarkGrey
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +56,8 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState
+                sheetState = sheetState,
+                containerColor = DarkGrey,
             ) {
                 PasswordModalBottomSheet(
                     viewModel = viewModel,
@@ -62,6 +66,7 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
             }
         }
     }
+
 }
 
 fun NavHostController.navigateToPasswordGenerator() {

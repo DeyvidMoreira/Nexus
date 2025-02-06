@@ -4,6 +4,7 @@ package com.example.nexus.core.di
 import androidx.room.Room
 import com.example.nexus.framework.service.local.AppDatabase
 import com.example.nexus.framework.service.local.repository.PasswordRepository
+import com.example.nexus.framework.service.local.until.getDatabaseMigrations
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.ViewModels.SignUpViewModel
@@ -32,7 +33,9 @@ val localStorageModule = module {
             AppDatabase::class.java,
             ConstantsDatabase.DATA_BASE_NAME
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(
+                *getDatabaseMigrations()
+            )
             .build()
     }
     single { get<AppDatabase>().passwordDao() }

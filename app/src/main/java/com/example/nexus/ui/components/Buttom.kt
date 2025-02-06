@@ -10,12 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.nexus.ui.theme.LightGreen
+import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.NeonGreen
 
 @Composable
 fun ButtomCustom(
-    onClick: () -> Unit = {}, content: @Composable () -> Unit
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+
 ) {
     Button(
         onClick = onClick,
@@ -23,7 +26,7 @@ fun ButtomCustom(
             .width(300.dp)
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = NeonGreen, contentColor = LightGreen
+            containerColor = NeonGreen, contentColor = DarkGrey
         ),
         shape = RoundedCornerShape(30.dp, 0.dp, 30.dp, 0.dp),
     ) {

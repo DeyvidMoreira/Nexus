@@ -11,10 +11,12 @@ data class GeneratorState(
     val onEspecialChange: (Boolean) -> Unit = {},
     val passwordLength: Int = 0,
     val passwordLengthChange: (Int) -> Unit = {},
-    val sliderValue: Float = 8f,
+    val sliderValue: Float = 0f,
     val sliderValueChange: (Float) -> Unit = {},
     val generatedPassword: String? = null,
     val onGeneratePassword: () -> Unit = {},
     val generatePassword: () -> Unit = {},
-    val errorMessage: String? = null
+    val isPasswordSaved: Boolean = false,
+    val warningMessage: String? = null,
+
 )

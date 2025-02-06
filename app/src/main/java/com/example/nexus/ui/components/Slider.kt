@@ -8,8 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nexus.ui.theme.DarkGrey
-import com.example.nexus.ui.theme.LightGreen
-import com.example.nexus.ui.theme.LightGrey
 import com.example.nexus.ui.theme.MatteGreen
 import com.example.nexus.ui.theme.NeonGreen
 
@@ -31,7 +29,7 @@ fun CustomSlider(
             activeTrackColor = NeonGreen,
             inactiveTrackColor = DarkGrey
         ),
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
 
