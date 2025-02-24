@@ -2,16 +2,24 @@ package com.example.nexus.ui.ViewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.nexus.core.service.repository.local.ValidationError
 import com.example.nexus.core.service.repository.local.validationFields.InputValidation
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.SignUpUiState
+import com.example.nexus.ui.until.WarningMessage
+import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.suspendCoroutine
 
 class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
@@ -21,6 +29,13 @@ class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository
     val signUpIsSuccessful = _signUpIsSuccessful.asSharedFlow()
 
     init {
+        viewModelScope.launch{
+            WarningMessage.message.collect{ message ->
+                _uiState.update { currentState ->
+                    currentState.copy(warningMessage = message)
+                }
+            }
+        }
         _uiState.update { currentState ->
             currentState.copy(
                 onUserChange = { user ->
@@ -40,7 +55,7 @@ class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository
     }
 
     suspend fun signUp() {
-
+        val email = _uiState.value.email
         //Realiza as validações
         val validationError = InputValidation.validateEmptyFields(
             _uiState.value.user,
@@ -55,60 +70,71 @@ class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository
                 _uiState.value.password,
                 _uiState.value.confirmPassword
             )
-        // Se houver erro de validação, exiba-o e interrompa o cadastro
+            ?: InputValidation.validateFields(
+                _uiState.value.user,
+                _uiState.value.email,
+                _uiState.value.password,
+                _uiState.value.confirmPassword
+            )
+
         if (validationError != null) {
             val errorMessage = getValidationErrorMessage(validationError)
-            _uiState.update {
-                it.copy(error = errorMessage)
+            WarningMessage.setMessage(errorMessage)
 
-            }
-            //Limpa a mensagem de erro após 3 segundos
-            delayMessageAndClearError()
             return
         }
-        // Se não houver erro de validação, prossiga com o cadastro
-        try {
-            firebaseAuthRepository
-                .signUp(
-                    _uiState.value.email,
-                    _uiState.value.password
-                )
-            _signUpIsSuccessful.emit(true)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                firebaseAuthRepository.signUp(_uiState.value.email, _uiState.value.password)
+
+                _uiState.update { currentState ->
+                    currentState.copy(isSuccessful = true)
+                }
+
+                WarningMessage.setMessage(ConstantsMessages.MESSAGE_USER_SAVED)
+
+                delay(2000)
+
+                _signUpIsSuccessful.emit(true)
+
+            } catch (e: Exception) {
+                Log.e("email", "Email Registred ", e)
+                WarningMessage.setMessage(ConstantsMessages.MESSAGE_INVALID_EMAIL)
+            }
+        }
+
+    }
+
+    private suspend fun checkIfEmailExists(email: String): Boolean {
+        return try {
+            if (email.isBlank()) return false
+
+            val result = FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).await()
+            val signInMethods = result.signInMethods ?: emptyList()
+            signInMethods.isNotEmpty()
         } catch (e: Exception) {
-            Log.e("SignUpViewModel", "signUp: ", e)
-            _uiState.update {
-                it.copy(
-                    error = "Erro ao cadastrar usuário"
-                )
-            }
-            delay(3000)
-            _uiState.update {
-                it.copy(
-                    error = null
-                )
-            }
+            Log.e("SignUpViewModel", "checkIfEmailExists: ", e)
+            false
         }
     }
 
     //Função para obter a mensagem de erro de validação correspondente
-    fun getValidationErrorMessage(error: ValidationError): String {
+    private fun getValidationErrorMessage(error: ValidationError): String {
         return when (error) {
             ValidationError.PASSWORD_EMPTY -> "A senha não pode ser vazia"
             ValidationError.PASSWORD_TOO_SHORT -> "A senha deve ter pelo menos 8 caracteres"
             ValidationError.PASSWORD_NO_UPPERCASE -> "A senha deve ter pelo menos uma letra maiúscula"
             ValidationError.PASSWORD_NO_LOWERCASE -> "A senha deve ter pelo menos uma letra minúscula"
             ValidationError.PASSWORD_NO_NUMBER -> "A senha deve ter pelo menos um número"
+            ValidationError.PASSWORD_NO_SPECIAL_CHAR -> "A senha deve ter pelo menos um caractere especial"
             ValidationError.PASSWORDS_DO_NOT_MATCH -> "As senhas não coincidem"
-            else -> "Erro desconhecido"
+            ValidationError.INVALID_NAME -> "Nome inválido"
+            ValidationError.INVALID_EMAIL -> "Email inválido"
+            ValidationError.EMPTY_FIELDS -> "Preencha todos os campos"
         }
     }
 
-    //Função para exibir a mensagem de erro por 3 segundos depois limpar
-    private suspend fun delayMessageAndClearError(){
-        delay(3000)
-        _uiState.update {
-            it.copy(error = null)
-        }
-    }
 
 }

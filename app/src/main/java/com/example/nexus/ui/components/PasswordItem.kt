@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.until.toFormattedDate
 import com.example.nexus.framework.service.local.until.toFormattedTime
@@ -50,21 +51,23 @@ fun PasswordItem(
             TextCustom(
                 text = password.tag,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
             )
             TextCustom(
                 text = password.password,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row {
                 TextCustom(
-                    text = "Data: ${password.createdAt.toFormattedDate()}",
+                    text = "Data:${password.createdAt.toFormattedDate()}",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 SpacerCustom(paddingEnd = 32.dp)
                 TextCustom(
-                    text = "Hora: ${password.createdAt.toFormattedTime()}",
+                    text = "Hora:${password.createdAt.toFormattedTime()}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

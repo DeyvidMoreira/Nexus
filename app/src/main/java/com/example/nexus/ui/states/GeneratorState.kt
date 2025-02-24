@@ -18,5 +18,4 @@ data class GeneratorState(
     val generatePassword: () -> Unit = {},
     val isPasswordSaved: Boolean = false,
     val warningMessage: String? = null,
-
 )

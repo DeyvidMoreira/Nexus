@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.NeonGreen
 
 
@@ -29,6 +30,7 @@ import com.example.nexus.ui.theme.NeonGreen
 fun CustomMessageBox(message: String, isSuccess: Boolean) {
 
     val backgroundColor = if (isSuccess) NeonGreen else Color.Red
+    val textColor = if (isSuccess) DarkGrey else Color.White
     val icon = if (isSuccess) Icons.Default.Check else Icons.Default.Error
 
     Box(
@@ -48,13 +50,12 @@ fun CustomMessageBox(message: String, isSuccess: Boolean) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.Black,
+                tint = textColor,
                 modifier = Modifier.padding(16.dp)
             )
-            // Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = message,
-                color = Color.Black,
+                color = textColor,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )

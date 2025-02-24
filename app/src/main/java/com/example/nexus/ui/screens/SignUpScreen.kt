@@ -1,11 +1,8 @@
 package com.example.nexus.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -13,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexus.R
+import com.example.nexus.ui.components.CustomMessageBox
 import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
@@ -43,29 +42,24 @@ import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
+import com.example.nexus.ui.until.WarningMessage
 
 @Composable
 fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+    val warningMessage by WarningMessage.message.collectAsState()
+    val currentWarningMessage = warningMessage ?: uiState.warningMessage
+
     ColumnBackgroundColor {
-        //Mensagem de erro de registro
-        AnimatedVisibility(visible = uiState.error != null) {
-            uiState.error?.let {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.Red)
-                ) {
-                    Text(
-                        text = it,
-                        color = Color.White,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
+        //Aviso
+        currentWarningMessage?.let { message ->
+            Box(
+                contentAlignment = Alignment.TopCenter
+            ){
+                CustomMessageBox(
+                    message = message,
+                    isSuccess = uiState.isSuccessful
+                )
             }
         }
         SpacerCustom(paddingBottom = 16.dp)
@@ -140,7 +134,6 @@ fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
                     value = uiState.password,
                     onValueChange = uiState.onPasswordChange,
                     hint = stringResource(id = R.string.hint_password_register),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
                     visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     showTrailingIcon = true,
@@ -158,7 +151,6 @@ fun SignUpScreen(uiState: SignUpUiState, onSignUpClick: () -> Unit) {
                     value = uiState.confirmPassword,
                     onValueChange = uiState.onConfirmPasswordChange,
                     hint = stringResource(id = R.string.hint_repeat_password),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
                     visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     showTrailingIcon = false,
@@ -193,9 +185,18 @@ private fun SingUpScreenPreview() {
 
 @Preview(name = "With Error")
 @Composable
-private fun SingUpScreen1Preview() {
-    SignUpScreen(
-        uiState = SignUpUiState(error = "Error")
-    ) {}
+private fun SingUpScreenErrorPreview() {
+    val uiState = SignUpUiState(warningMessage = "Erro ao carregar dados")
+    SignUpScreen(uiState) {}
+}
+
+@Preview(name = "User saved")
+@Composable
+private fun SingUpScreenSuccessPreview() {
+    val uiState = SignUpUiState(
+        isSuccessful = true,
+        warningMessage = "Usuário salvo com sucesso!"
+    )
+    SignUpScreen(uiState) {}
 }
 

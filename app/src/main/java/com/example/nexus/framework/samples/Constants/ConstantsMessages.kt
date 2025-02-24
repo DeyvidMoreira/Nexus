@@ -7,9 +7,17 @@ object ConstantsMessages {
     const val MESSAGE_NO_TAG= "Informe um Título para a senha."
     const val MESSAGE_NO_PASSWORD_SAVED = "Nenhuma senha foi encontrada."
     const val MESSAGE_NO_GENERATE_PASSWORD = "Gere uma senha antes de salvar."
-    const val MESSAGE_PASSWORD_SAVED = "Senha salva com sucesso."
+
     const val MESSAGE_PASSWORD_NOT_SAVED = "Erro ao salvar a senha."
     const val MESSAGE_PASSWORD_DELETED = "Senha deletada com sucesso."
-        const val MESSAGE_PASSWORD_GENERED = "Senha Gerada: "
 
+    const val MESSAGE_REGISTER_FAILED = "Erro ao cadastrar usuário"
+    const val MESSAGE_INVALID_EMAIL = "Email inválido"
+    const val MESSAGE_INVALID_USER = "Usuário inválido"
+    const val MESSAGE_EMPTY_FIELDS = "Preencha todos os campos"
+
+
+
+    const val MESSAGE_PASSWORD_SAVED = "Senha salva com sucesso."
+    const val MESSAGE_USER_SAVED = "Usuário salvo com sucesso."
 }

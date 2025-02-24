@@ -1,15 +1,17 @@
 package com.example.nexus.ui.states
 
-data class SignUpUiState (
-    var user: String = "",
+data class SignInState(
     var email: String = "",
     var password: String = "",
-    var confirmPassword: String = "",
-    var onUserChange: (String) -> Unit = {},
+    var isRememberMeChecked: Boolean = false,
+    var onRememberMeClick: () -> Unit = {},
+    var onForgotPasswordClick: () -> Unit = {},
+    var onSignUpClick: () -> Unit = {},
     var onEmailChange: (String) -> Unit = {},
     var onPasswordChange: (String) -> Unit = {},
-    var onConfirmPasswordChange: (String) -> Unit = {},
-    var onSignUpClick: () -> Unit = {},
+    var onSignInClick: () -> Unit = {},
+    var onNavigationToSignUp: () -> Unit = {},
+    var onNavigationToForgotPassword: () -> Unit = {},
     var isSuccessful: Boolean = false,
     var isLoading: Boolean = false,
     var isPasswordVisible: Boolean = false,

@@ -114,4 +114,10 @@ dependencies {
     //Material Icons
     implementation(libs.material.icons.extended)
 
+    //Data Store
+    implementation (libs.androidx.datastore.preferences)
+
+    //Google Crypto
+    implementation (libs.androidx.security.crypto)
+
 }

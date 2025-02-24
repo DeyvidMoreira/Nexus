@@ -13,4 +13,10 @@ class FirebaseAuthRepository (
 
     }
 
+    suspend fun singIn(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .await()
+
+    }
+
 }

@@ -71,7 +71,8 @@ fun SavePasswordDialog(
                     onValueChange = { passwordTag = it },
                     icon = R.drawable.ic_save,
                     hint = "Tag para a Senha",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+
                 )
             }
         },

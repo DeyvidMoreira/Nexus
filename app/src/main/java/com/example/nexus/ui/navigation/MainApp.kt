@@ -28,13 +28,19 @@ fun MainApp() {
             startDestination = AuthNavigationGraph.SIGN_IN,
             route = MainAppRoute.AUTH
         ) {
-            composable(AuthNavigationGraph.SIGN_IN) {
-                SingInScreen(navController) {
-                    navController.navigate(MainAppRoute.MAIN) {
+            signInNavigation(
+                onNavigationToSignUp = {
+                    navController.navigate(AuthNavigationGraph.SIGN_UP)
+                },
+                onNavigationToHome = {
+                    navController.navigate(MainAppRoute.MAIN){
                         popUpTo(MainAppRoute.AUTH) { inclusive = true }
                     }
+                },
+                onNavigationToForgotPassword = {
+                    navController.navigate(AuthNavigationGraph.FORGOT_PASSWORD)
                 }
-            }
+            )
             signUpNavigation {
                 navController.navigate(AuthNavigationGraph.SIGN_IN) {
                     popUpTo(AuthNavigationGraph.SIGN_IN) { inclusive = true }

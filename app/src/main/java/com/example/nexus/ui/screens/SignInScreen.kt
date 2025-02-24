@@ -1,8 +1,8 @@
 package com.example.nexus.ui.theme.screens
 
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,12 +33,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
 import com.example.nexus.framework.service.remote.entity.UserModel
+import com.example.nexus.ui.components.CustomMessageBox
 import com.example.nexus.ui.components.TextButtonCustom
-import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
+import com.example.nexus.ui.states.SignInState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.MatteGreen
@@ -50,22 +49,31 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
-/**
- * Função composable para a tela de login.
- * Permite que o usuário entre no aplicativo fornecendo email e senha.
- *
- * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
- * @param onEnterClick Função de callback executada quando o usuário clica no botão de entrar.
- */
-@SuppressLint("RememberReturnType")
 @Composable
-fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var rememberMeCheck by rememberSaveable { mutableStateOf(false) }
+fun SingInScreen(
+    uiState: SignInState,
+    onEnterClick: (UserModel) -> Unit,
+    onNavigationToSignUp: () -> Unit = {},
+    onNavigationToForgotPassword: () -> Unit = {}
+) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+    val warningMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    val currentWarningMessage = warningMessage ?: uiState.warningMessage
 
     ColumnBackgroundColor {
+        currentWarningMessage?.let { message ->
+            Box(
+                contentAlignment = Alignment.TopCenter
+            ) {
+                CustomMessageBox(
+                    message = message,
+                    isSuccess = uiState.isSuccessful
+                )
+            }
+        }
+
+        SpacerCustom(paddingBottom = 36.dp)
+
         // Nome do aplicativo com estilo gradiente
         TextCustom(
             text = stringResource(id = R.string.app_name),
@@ -101,8 +109,8 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
             ) {
                 // Campo de entrada para o email
                 TextFieldCustom(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = uiState.email,
+                    onValueChange = { newEmail -> uiState.onEmailChange(newEmail) },
                     hint = stringResource(id = R.string.hint_user_email),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -111,10 +119,9 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
 
                 // Campo de entrada para a senha com opção de mostrar/ocultar
                 TextFieldCustom(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = uiState.password,
+                    onValueChange = { newPassword -> uiState.onPasswordChange(newPassword) },
                     hint = stringResource(id = R.string.hint_password),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     icon = R.drawable.ic_pwd,
                     visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     showTrailingIcon = true,
@@ -134,8 +141,8 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                 ) {
                     // Checkbox "Lembrar-me"
                     Checkbox(
-                        checked = rememberMeCheck,
-                        onCheckedChange = { rememberMeCheck = !rememberMeCheck },
+                        checked = uiState.isRememberMeChecked,
+                        onCheckedChange = { uiState.onRememberMeClick() },
                         colors = CheckboxDefaults.colors(
                             checkedColor = NeonGreen,
                             uncheckedColor = NeonGreen,
@@ -147,7 +154,7 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                     SpacerCustom(paddingEnd = 6.dp)
 
                     // Texto "Lembrar-me"
-                    TextButtonCustom(onClick = { rememberMeCheck = !rememberMeCheck }) {
+                    TextButtonCustom(onClick = { uiState.onRememberMeClick() }) {
                         TextCustom(
                             text = stringResource(id = R.string.txt_remember_me),
                             fontSize = 14.sp
@@ -157,7 +164,7 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                     SpacerCustom(paddingStart = 10.dp, paddingEnd = 10.dp)
 
                     // Botão "Esqueceu a senha?"
-                    TextButtonCustom(onClick = { navController.navigate(AuthNavigationGraph.FORGOT_PASSWORD) }) {
+                    TextButtonCustom(onClick =onNavigationToForgotPassword) {
                         TextCustom(
                             text = stringResource(id = R.string.btn_forgot_password),
                             fontSize = 14.sp
@@ -170,7 +177,7 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                 // Botão de entrar
                 ButtomCustom(
                     onClick = {
-                        onEnterClick(UserModel(email, password))
+                        onEnterClick(UserModel(uiState.email, uiState.password))
                     }
                 ) {
                     Text(
@@ -182,7 +189,7 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
                 SpacerCustom(paddingBottom = 25.dp)
 
                 // Botão para navegar para a tela de cadastro
-                TextButtonCustom(onClick = { navController.navigate(AuthNavigationGraph.SIGN_UP) }) {
+                TextButtonCustom(onClick = onNavigationToSignUp) {
                     TextCustom(
                         text = stringResource(id = R.string.btn_register),
                         fontSize = 14.sp
@@ -196,7 +203,14 @@ fun SingInScreen(navController: NavController, onEnterClick: (UserModel) -> Unit
 @Composable
 @Preview
 private fun SingInScreenPreview() {
-    //Mock do navController para renderizar o preview
-    val navController = rememberNavController()
-    SingInScreen(navController = navController, onEnterClick = {})
+    val uiState = SignInState()
+    SingInScreen (onEnterClick = {}, uiState = uiState)
+}
+
+@Composable
+@Preview("With Error")
+private fun ErrorPreview(){
+    val uiState = SignInState(warningMessage = "Erro ao carregar dados")
+    SingInScreen(uiState, onEnterClick = {})
+
 }

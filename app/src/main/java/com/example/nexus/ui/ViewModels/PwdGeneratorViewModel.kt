@@ -1,8 +1,6 @@
 package com.example.nexus.ui.ViewModels
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,10 +8,11 @@ import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.until.PasswordValidator
+import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsCharacters
 import com.example.pwdcripto.framework.contants.ConstantsMessages
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +28,17 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
 
     private val _searchQuery = MutableStateFlow("")
 
+    init {
+        viewModelScope.launch {
+            WarningMessage.message.collect { message ->
+                _state.update { currentState ->
+                    currentState.copy(warningMessage = message)
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasswords = _searchQuery.flatMapLatest { query ->
         if (query.isEmpty()) {
             passwordRepository.allPasswords
@@ -64,12 +74,12 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
         }
 
         if (chars.isEmpty()) {
-            setError(ConstantsMessages.MESSAGE_NO_SELECTED_OPTION)
+            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_SELECTED_OPTION)
             return
         }
 
         if (_state.value.passwordLength < 1) {
-            setError(ConstantsMessages.MESSAGE_NO_PASSWORD_LENGTH)
+            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_PASSWORD_LENGTH)
             return
         }
 
@@ -89,11 +99,11 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
         val error = PasswordValidator.validate(tag, _state.value.generatedPassword ?: "")
         val generatedPassword = _state.value.generatedPassword
         if (generatedPassword.isNullOrEmpty()) {
-            setError(ConstantsMessages.MESSAGE_NO_GENERATE_PASSWORD)
+            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_GENERATE_PASSWORD)
             return
         }
         if (tag.isEmpty()) {
-            setError(ConstantsMessages.MESSAGE_NO_TAG)
+            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_TAG)
             return
         }
 
@@ -108,10 +118,10 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
                 _state.update { currentState ->
                     currentState.copy(isPasswordSaved = true)
                 }
-                setError(ConstantsMessages.MESSAGE_PASSWORD_SAVED,)
+                WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_SAVED,)
             } catch (e: Exception) {
                 Log.e("PwdGeneratorViewModel", ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED, e)
-                setError(ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED)
+                WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED)
             }
         }
     }
@@ -125,20 +135,6 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
     fun deletePassword(password: PasswordEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             passwordRepository.deletePassword(password)
-        }
-    }
-
-    private fun setError(message: String?) {
-        _state.update { currentState ->
-            currentState.copy(warningMessage = message)
-        }
-        message?.let {
-            viewModelScope.launch {
-                delay(3000) // Aguarda 3 segundos
-                _state.update { currentState ->
-                    currentState.copy(warningMessage = null)
-                }
-            }
         }
     }
 }

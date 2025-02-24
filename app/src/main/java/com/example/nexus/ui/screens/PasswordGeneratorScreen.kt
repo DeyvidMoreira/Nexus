@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -49,6 +51,7 @@ import com.example.nexus.ui.theme.components.ButtomCustom
 import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
+import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsCharacters
 
 @Composable
@@ -65,6 +68,8 @@ fun PasswordGeneratorScreen(
     dialogChange: (Boolean) -> Unit = {},
     bottomSheetChange: (Boolean) -> Unit = {}
 ) {
+    val warningMessage by WarningMessage.message.collectAsState()
+    val currentWarningMessage = warningMessage
 
     Box(
         modifier = Modifier
@@ -90,18 +95,18 @@ fun PasswordGeneratorScreen(
                         ){
 
                         // Mensagem de aviso
-                        uiState.warningMessage?.let {
+                        currentWarningMessage?.let { message ->
                             Box(
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 CustomMessageBox(
-                                    message = uiState.warningMessage,
+                                    message = message,
                                     isSuccess = uiState.isPasswordSaved
                                 )
                             }
                         }
                         // Título e descrição
-                        if (uiState.warningMessage == null) {
+                        if (currentWarningMessage == null) {
                             //SpacerCustom(paddingBottom = 16.dp)
                             TextCustom(
                                 text = stringResource(R.string.title),
@@ -141,8 +146,6 @@ fun PasswordGeneratorScreen(
                             }
                         }
                     }
-
-
 
                     // Card de menu de opções
                     AnimatedBorderCard(
@@ -264,7 +267,6 @@ fun PasswordGeneratorScreen(
             }
         }
     }
-
 
 }
 
