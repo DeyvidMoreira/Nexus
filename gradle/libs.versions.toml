@@ -1,6 +1,8 @@
 [versions]
 agp = "8.8.0"
 composeBomVersion = "2025.01.01"
+core = "1.6.1"
+coreTesting = "2.2.0"
 datastorePreferences = "1.1.2"
 firebaseBom = "33.8.0"
 koinAndroidxCompose = "3.4.0"
@@ -12,23 +14,32 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 kotlinxCoroutinesAndroid = "1.7.3"
 kotlinxCoroutinesCore = "1.7.3"
+kotlinxCoroutinesTest = "1.6.4"
+kotlinxCoroutinesTestVersion = "1.7.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2025.01.00"
 materialIconsExtended = "1.7.7"
 materialIconsExtendedVersion = "1.1.2"
+mockitoCore = "4.5.1"
+mockitoKotlin = "4.5.1"
+mockk = "1.13.5"
 navigationCompose = "2.8.5"
 roomCompiler = "2.6.1"
 roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
 securityCrypto = "1.1.0-alpha06"
+truth = "1.1.3"
 uiTooling = "1.7.6"
 uiToolingPreview = "1.7.6"
 runtimeLivedata = "1.7.6"
+coreKtxVersion = "1.6.1"
 
 [libraries]
 androidx-compose-bom-v20250101 = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
@@ -58,11 +69,18 @@ koin-test = { module = "io.insert-koin:koin-test", version.ref = "koinTest" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+kotlinx-coroutines-test-v171 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTestVersion" }
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 material3-material-icons-extended = { module = "androidx.compose.material3:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

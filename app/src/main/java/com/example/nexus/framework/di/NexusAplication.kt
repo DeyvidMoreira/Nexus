@@ -1,4 +1,4 @@
-package com.example.nexus
+package com.example.nexus.framework.di
 
 import android.app.Application
 import com.example.nexus.core.di.appModule

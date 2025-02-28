@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -119,5 +120,22 @@ dependencies {
 
     //Google Crypto
     implementation (libs.androidx.security.crypto)
+
+    // JUnit para testes unitários
+    testImplementation(libs.junit)
+
+    // Kotlinx Coroutines Test para testar corrotinas e fluxos
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // AndroidX Core Testing para testar componentes do Android (por exemplo, ViewModel)
+    testImplementation(libs.androidx.core.testing)
+
+    // Framework de Mock (MockK, por exemplo)
+    testImplementation(libs.mockk)
+
+    // Biblioteca de asserts, como o Truth
+    testImplementation(libs.truth)
+
+
 
 }

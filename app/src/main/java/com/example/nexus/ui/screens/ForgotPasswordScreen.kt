@@ -35,12 +35,7 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
-/**
- * Função composable para a tela de esqueci a senha.
- * Permite que o usuário solicite a redefinição da senha fornecendo o email.
- *
- * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
- */
+
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
     var userEmail by rememberSaveable { mutableStateOf("") }
@@ -103,7 +98,7 @@ fun ForgotPasswordScreen(navController: NavController) {
                     }
                 ) {
                     Text(
-                        text = stringResource(id = R.string.btn_send_link),
+                        text = stringResource(id = R.string.btn_send_code),
                         color = DarkGrey
                     )
                 }

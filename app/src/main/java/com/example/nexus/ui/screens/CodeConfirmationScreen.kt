@@ -61,13 +61,15 @@ fun CodeConfirmationScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextCustom(
-                    text = "",
+                    text = stringResource(id= R.string.txt_send_code),
                     fontSize = 18.sp
                 )
                 SpacerCustom(
                     paddingBottom = 30.dp
                 )
                 TextFieldCustom(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
                     value = code,
                     onValueChange = {
                         code = it

@@ -1,5 +1,7 @@
 package com.example.pwdcripto.framework.contants
 
+import com.example.nexus.ui.until.WarningMessage
+
 object ConstantsMessages {
 
     const val MESSAGE_NO_SELECTED_OPTION = "Selecione pelo menos uma opção."
@@ -20,4 +22,11 @@ object ConstantsMessages {
 
     const val MESSAGE_PASSWORD_SAVED = "Senha salva com sucesso."
     const val MESSAGE_USER_SAVED = "Usuário salvo com sucesso."
+    const val MESSAGE_PASSWORD_IS_WEAK = "A senha é muito fraca."
+    const val MESSAGE_INVALID_CREDENTIALS = "Credenciais inválidas."
+
+
+
+
+
 }

@@ -10,6 +10,10 @@ import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsMessages
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("UNREACHABLE_CODE")
 class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val iuState = _uiState.asStateFlow()
@@ -99,9 +104,12 @@ class SignUpViewModel(private val firebaseAuthRepository: FirebaseAuthRepository
 
                 _signUpIsSuccessful.emit(true)
 
-            } catch (e: Exception) {
-                Log.e("email", "Email Registred ", e)
-                WarningMessage.setMessage(ConstantsMessages.MESSAGE_INVALID_EMAIL)
+            }catch (e: Exception){
+                Log.e("SignUpViewModel", "signUp: ", e)
+                _uiState.update { currentState ->
+                    currentState.copy(isSuccessful = false)
+                }
+                WarningMessage.setMessage(e.message)
             }
         }
 

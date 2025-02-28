@@ -6,6 +6,7 @@ import com.example.nexus.core.service.repository.local.ValidationError
 import com.google.firebase.auth.FirebaseAuth
 
 object InputValidation {
+    private val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)\$".toRegex()
 
     fun validateName(name: String): ValidationError? {
         if (name.isBlank() || name.startsWith(" ") || name.endsWith(" ")) {
@@ -27,7 +28,8 @@ object InputValidation {
     }
 
     fun validateEmail(email: String): ValidationError? {
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+        if (!EMAIL_REGEX.matches(email)) {
             return ValidationError.INVALID_EMAIL
         }
         return null

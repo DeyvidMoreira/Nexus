@@ -66,7 +66,7 @@ class SignInViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                firebaseAuthRepository.singIn(_uiState.value.email, _uiState.value.password)
+                firebaseAuthRepository.signIn(_uiState.value.email, _uiState.value.password)
                 _uiState.update { currentState -> currentState.copy(isSuccessful = true) }
                 _singInIsSuccessful.emit(true)
 
@@ -79,7 +79,7 @@ class SignInViewModel(
             } catch (e: Exception) {
                 Log.e("singIn", "singIn: ", e)
                 _uiState.update { currentState -> currentState.copy(isSuccessful = false) }
-                WarningMessage.setMessage(ConstantsMessages.MESSAGE_INVALID_USER)
+                WarningMessage.setMessage(e.message)
             }
         }
     }
