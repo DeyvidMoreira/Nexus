@@ -1,6 +1,8 @@
 package com.example.nexus.core.di
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.example.nexus.framework.service.local.AppDatabase
 import com.example.nexus.framework.service.local.repository.PasswordRepository
@@ -19,6 +21,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 
+@RequiresApi(Build.VERSION_CODES.R)
 val appModule = module {
     viewModelOf(::SignUpViewModel)
     viewModelOf(::SignInViewModel)
