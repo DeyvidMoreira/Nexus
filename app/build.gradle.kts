@@ -136,6 +136,10 @@ dependencies {
     // Biblioteca de asserts, como o Truth
     testImplementation(libs.truth)
 
+    //Biometric API
+    implementation (libs.androidx.biometric.v120alpha05)
 
+    //AppCompat
+    implementation(libs.androidx.appcompat)
 
 }

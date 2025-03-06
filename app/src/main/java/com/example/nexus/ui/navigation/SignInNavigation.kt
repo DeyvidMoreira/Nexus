@@ -1,5 +1,7 @@
 package com.example.nexus.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,10 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.nexus.ui.ViewModels.SignInViewModel
 import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
-import com.example.nexus.ui.theme.screens.SingInScreen
+import com.example.nexus.ui.theme.screens.SignInScreen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@RequiresApi(Build.VERSION_CODES.R)
 fun NavGraphBuilder.signInNavigation(
     onNavigationToSignUp: () -> Unit,
     onNavigationToHome: () -> Unit,
@@ -22,14 +25,16 @@ fun NavGraphBuilder.signInNavigation(
     composable(AuthNavigationGraph.SIGN_IN) {
         val viewModel = koinViewModel<SignInViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+
         val scope = rememberCoroutineScope()
-        val singInIsSuccessful by viewModel.singInIsSuccessful.collectAsState(false)
+        val singInIsSuccessful by viewModel.signInIsSuccessful.collectAsState(false)
+
         LaunchedEffect(singInIsSuccessful) {
             if (singInIsSuccessful) {
                 onNavigationToHome()
             }
         }
-        SingInScreen(
+        SignInScreen(
             uiState = uiState,
             onEnterClick = {
                 scope.launch {
@@ -37,7 +42,7 @@ fun NavGraphBuilder.signInNavigation(
                 }
             },
             onNavigationToSignUp = onNavigationToSignUp,
-            onNavigationToForgotPassword = onNavigationToForgotPassword
+            onNavigationToForgotPassword = onNavigationToForgotPassword,
         )
     }
 }

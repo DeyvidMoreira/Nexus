@@ -13,9 +13,10 @@ private val Context.dataStore by preferencesDataStore("user_preferences")
 class UserPreferences(private val context: Context) {
     private val cryptoHelper = CryptoHelper(context)
 
+    private val dataStore = context.dataStore
+
     companion object {
         private val USER_EMAIL = stringPreferencesKey("user_email")
-        private val USER_PASSWORD = stringPreferencesKey("user_password")
         private val REMEMBER_ME = booleanPreferencesKey("remember_me")
     }
 
@@ -25,9 +26,8 @@ class UserPreferences(private val context: Context) {
     }
 
     suspend fun getSavedPassword(): String {
-        val preferences = context.dataStore.data.first()
-        val encryptedPassword = preferences[USER_PASSWORD] ?: ""
-        return cryptoHelper.decryptData(encryptedPassword)
+        val encryptedPassword = cryptoHelper.decryptData("user_password")
+        return encryptedPassword
     }
 
     suspend fun getRememberMe(): Boolean {
@@ -35,20 +35,37 @@ class UserPreferences(private val context: Context) {
         return preferences[REMEMBER_ME] ?: false
     }
 
-    suspend fun savedUserCredentials(email: String, password:String){
-        val encryptedPassword = cryptoHelper.encryptData("password",password)
-        context.dataStore.edit { prefs ->
-            prefs[USER_EMAIL] = email
-            prefs[USER_PASSWORD] = encryptedPassword.toString()
-            prefs[REMEMBER_ME] = true
+    suspend fun savedUserCredentials(email: String, password: String) {
+        try {
+            // Criptografa a senha corretamente
+            val encryptedPassword = cryptoHelper.encryptData(password)
+
+            // Salva os dados no DataStore
+            context.dataStore.edit { prefs ->
+                prefs[USER_EMAIL] = email
+                prefs[REMEMBER_ME] = true
+            }
+
+            cryptoHelper.saveEncryptedPassword("user_password", encryptedPassword)
+
+            // Verifique se os dados foram salvos corretamente
+            val savedEmail = getSavedEmail()
+            val savedPassword = getSavedPassword()
+            println("Saved Email: $savedEmail")
+            println("Saved Password: $savedPassword") // Deveria mostrar a senha descriptografada
+
+        } catch (e: Exception) {
+            // Lidar com erros de criptografia ou problemas no armazenamento
+            println("Erro ao salvar as credenciais: ${e.message}")
         }
     }
 
     suspend fun clearUserCredentials() {
         context.dataStore.edit { prefs ->
             prefs.remove(USER_EMAIL)
-            prefs.remove(USER_PASSWORD)
-            prefs[REMEMBER_ME] = false
+            prefs.remove(REMEMBER_ME)
         }
+        cryptoHelper.clearEncryptedPassword("user_password")
+
     }
 }

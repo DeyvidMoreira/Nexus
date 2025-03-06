@@ -1,19 +1,21 @@
 package com.example.nexus.ui.states
 
 data class SignInState(
-    var email: String = "",
-    var password: String = "",
-    var isRememberMeChecked: Boolean = false,
-    var onRememberMeClick: () -> Unit = {},
-    var onForgotPasswordClick: () -> Unit = {},
-    var onSignUpClick: () -> Unit = {},
-    var onEmailChange: (String) -> Unit = {},
-    var onPasswordChange: (String) -> Unit = {},
-    var onSignInClick: () -> Unit = {},
-    var onNavigationToSignUp: () -> Unit = {},
-    var onNavigationToForgotPassword: () -> Unit = {},
-    var isSuccessful: Boolean = false,
-    var isLoading: Boolean = false,
-    var isPasswordVisible: Boolean = false,
-    var warningMessage: String? = null
+    val email: String = "",
+    val password: String = "",
+    val isRememberMeChecked: Boolean = false,
+    val onRememberMeClick: () -> Unit = {},
+    val isBiometricCheck: Boolean = false,
+    val onBiometricClick: () -> Unit = {},
+    val onForgotPasswordClick: () -> Unit = {},
+    val onSignUpClick: () -> Unit = {},
+    val onEmailChange: (String) -> Unit = {},
+    val onPasswordChange: (String) -> Unit = {},
+    val onSignInClick: () -> Unit = {},
+    val onNavigationToSignUp: () -> Unit = {},
+    val onNavigationToForgotPassword: () -> Unit = {},
+    val isSuccessful: Boolean = false,
+    val isLoading: Boolean = false,
+    val isPasswordVisible: Boolean = false,
+    val warningMessage: String? = null
 )

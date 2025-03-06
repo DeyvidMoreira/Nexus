@@ -8,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
 import com.example.nexus.ui.navigation.routes.MainNavigationGraph
 import com.example.nexus.ui.theme.screens.ForgotPasswordScreen
-import com.example.nexus.ui.theme.screens.SingInScreen
 
 
 object MainAppRoute {
