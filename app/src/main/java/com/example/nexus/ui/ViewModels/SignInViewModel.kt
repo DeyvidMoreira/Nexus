@@ -1,6 +1,5 @@
 package com.example.nexus.ui.ViewModels
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -166,32 +165,32 @@ class SignInViewModel(
             description = "Use sua biometria para fazer login"
         )
 
-       if (newCheckedState){
-           viewModelScope.launch(Dispatchers.IO) {
-               biometricPromptManager.promptResult.collect { result ->
-                   Log.d("BiometricAuth", "Resultado da biometria: $result")
-                   try {
-                       when (result) {
-                           is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
-                               Log.d("BiometricAuth", "Autenticação bem-sucedida!")
-                               signInWithBiometric()
-                           }
-                           is BiometricPromptManager.BiometricResult.AuthenticationError -> {
-                               Log.e("BiometricAuth",
-                                   "Erro na autenticação biométrica: ${result.error}")
-                               WarningMessage.setMessage(result.error)
-                           }
-                           else -> {
-                               Log.e("BiometricAuth", "Falha na autenticação biométrica.")
-                               WarningMessage.setMessage("Falha na autenticação biométrica.")
-                           }
-                       }
-                   } catch (e: Exception) {
-                       Log.e("BiometricAuth", "Erro na autenticação biométrica.", e)
-                   }
-               }
-           }
-       }
+        if (newCheckedState){
+            viewModelScope.launch(Dispatchers.IO) {
+                biometricPromptManager.promptResult.collect { result ->
+                    Log.d("BiometricAuth", "Resultado da biometria: $result")
+                    try {
+                        when (result) {
+                            is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
+                                Log.d("BiometricAuth", "Autenticação bem-sucedida!")
+                                signInWithBiometric()
+                            }
+                            is BiometricPromptManager.BiometricResult.AuthenticationError -> {
+                                Log.e("BiometricAuth",
+                                    "Erro na autenticação biométrica: ${result.error}")
+                                WarningMessage.setMessage(result.error)
+                            }
+                            else -> {
+                                Log.e("BiometricAuth", "Falha na autenticação biométrica.")
+                                WarningMessage.setMessage("Falha na autenticação biométrica.")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("BiometricAuth", "Erro na autenticação biométrica.", e)
+                    }
+                }
+            }
+        }
     }
 
     private fun signInWithBiometric() {

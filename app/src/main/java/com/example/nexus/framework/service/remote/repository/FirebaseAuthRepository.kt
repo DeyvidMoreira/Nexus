@@ -62,4 +62,29 @@ class FirebaseAuthRepository (
         }
     }
 
+    suspend fun resetPassword(email:String) {
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+        }catch (e: FirebaseAuthInvalidUserException) {
+            throw Exception("Nenhuma conta encontrada com este email.")
+        }catch (e: FirebaseAuthInvalidCredentialsException) {
+            throw Exception("Email inválido. Verifique se o endereço de email está correto.")
+        } catch (e: FirebaseAuthException) {
+            when (e.errorCode) {
+                "ERROR_NETWORK_REQUEST_FAILED" -> throw Exception("Erro de rede. Verifique sua conexão com a internet.")
+                "ERROR_TOO_MANY_REQUESTS" -> throw Exception("Muitas tentativas de redefinição. Aguarde um momento e tente novamente.")
+                else -> throw Exception("Erro desconhecido ao tentar redefinir a senha: ${e.message}")
+            }
+        }
+    }
+
+    suspend fun logout() {
+        try {
+            firebaseAuth.signOut()
+        }catch (e: FirebaseAuthException){
+            throw Exception("Erro ao fazer logout: ${e.message}")
+
+        }
+    }
+
 }

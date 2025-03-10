@@ -19,6 +19,11 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
         passwordDao.savePassword(passwordEntity)
     }
 
+    // Função para editar uma senha
+    suspend fun updatePassword(passwordEntity: PasswordEntity) {
+        passwordDao.updatePassword(passwordEntity)
+    }
+
     // Função para deletar uma senha
     suspend fun deletePassword(passwordEntity: PasswordEntity) {
         passwordDao.deletePassword(passwordEntity)

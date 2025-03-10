@@ -1,9 +1,6 @@
 package com.example.nexus.core.service.repository.local.validationFields
 
-import android.util.Log
-import android.util.Patterns
 import com.example.nexus.core.service.repository.local.ValidationError
-import com.google.firebase.auth.FirebaseAuth
 
 object InputValidation {
     private val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)\$".toRegex()

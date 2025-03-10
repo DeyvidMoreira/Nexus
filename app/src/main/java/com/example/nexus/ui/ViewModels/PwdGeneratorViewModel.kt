@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.repository.PasswordRepository
+import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.until.PasswordValidator
 import com.example.nexus.ui.until.WarningMessage
@@ -20,13 +21,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) : ViewModel() {
+class PwdGeneratorViewModel(
+    private val passwordRepository: PasswordRepository,
+    private val firebaseAuthRepository: FirebaseAuthRepository
+) : ViewModel() {
     private val _state = MutableStateFlow(GeneratorState())
     val state: StateFlow<GeneratorState> = _state.asStateFlow()
 
     val passwords = passwordRepository.allPasswords.asLiveData()
 
     private val _searchQuery = MutableStateFlow("")
+
 
     init {
         viewModelScope.launch {
@@ -118,7 +123,7 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
                 _state.update { currentState ->
                     currentState.copy(isPasswordSaved = true)
                 }
-                WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_SAVED,)
+                WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_SAVED)
             } catch (e: Exception) {
                 Log.e("PwdGeneratorViewModel", ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED, e)
                 WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED)
@@ -131,10 +136,39 @@ class PwdGeneratorViewModel(private val passwordRepository: PasswordRepository) 
         _searchQuery.value = query
     }
 
+    // Função para editar uma senha
+    fun editPassword(password: PasswordEntity) {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                passwordRepository.updatePassword(password)
+            }
+        } catch (e: Exception) {
+            Log.e("PwdGeneratorViewModel", "Erro ao editar senha", e)
+        }
+    }
+
     // Função para deletar uma senha
     fun deletePassword(password: PasswordEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             passwordRepository.deletePassword(password)
         }
     }
+
+    // Função Logout
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                firebaseAuthRepository.logout()
+            } catch (e: Exception) {
+                Log.e("PwdGeneratorViewModel", "Erro ao fazer logout", e)
+            }
+        }
+    }
+
+
 }
+
+
+
+
+

@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.buttons
 
 
 import androidx.compose.material3.Text

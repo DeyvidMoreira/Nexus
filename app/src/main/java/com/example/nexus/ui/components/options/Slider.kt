@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.options
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider

@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.nexus.R
+import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.components.ButtomCustom
@@ -24,14 +27,12 @@ import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
 @Composable
-fun SavePasswordDialog(
-    viewModel: PwdGeneratorViewModel,
+fun EditPasswordDialog(
     onDismiss: () -> Unit,
     backgroundColor: Color = DarkGrey,
-
+    viewModel: PwdGeneratorViewModel,
+    passwordToEdit: PasswordEntity
 ) {
-     val uiState by viewModel.state.collectAsState()
-
     var passwordTag by remember { mutableStateOf("") }
 
     AlertDialog(
@@ -39,10 +40,9 @@ fun SavePasswordDialog(
         confirmButton = {
             ButtomCustom (
                 onClick = {
-                    if (passwordTag.isNotEmpty()) {
-                        viewModel.savePassword(passwordTag, uiState.generatedPassword ?: "")
-                        onDismiss()
-                    }
+                    val updatePassword = passwordToEdit.copy(tag = passwordTag)
+                    viewModel.editPassword(updatePassword)
+                    onDismiss()
                 }
             ) {
                 TextCustom("Salvar", color = DarkGrey)
@@ -60,8 +60,9 @@ fun SavePasswordDialog(
             Column {
                 // Exibe a senha gerada
                 TextCustom(
-                    text = "Senha: ${uiState.generatedPassword ?: "Nenhuma senha gerada"}",
+                    text = stringResource(id = R.string.edit_password),
                     fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
@@ -70,10 +71,10 @@ fun SavePasswordDialog(
                     value = passwordTag,
                     onValueChange = { passwordTag = it },
                     icon = R.drawable.ic_save,
-                    hint = "Tag para a Senha",
+                    hint = stringResource(id = R.string.hint_edit_password),
                     modifier = Modifier.fillMaxWidth(),
 
-                )
+                    )
             }
         },
         containerColor = backgroundColor,
@@ -83,5 +84,5 @@ fun SavePasswordDialog(
 
 @Composable
 @Preview(showBackground = true)
-fun SavePasswordDialogPreview() {
+fun EditPasswordDialogPreview() {
 }

@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.options
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -1,6 +1,8 @@
 package com.example.nexus.framework.di
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.nexus.core.di.appModule
 import com.example.nexus.core.di.firebaseModule
 import com.example.nexus.core.di.localStorageModule
@@ -12,6 +14,7 @@ import org.koin.core.logger.Level
 
 class NexusAplication: Application()  {
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate() {
         super.onCreate()
         startKoin {

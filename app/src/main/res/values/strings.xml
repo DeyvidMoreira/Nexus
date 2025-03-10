@@ -19,7 +19,15 @@
     <string name="save_button">Salvar Senha</string>
     <string name="show_button">Senhas Salvas </string>
     <string name="search_password">Pesquisar senha: </string>
-    <string name="no_passwords_found">Nenhuma senha encontrada.</string>
+    <string name="no_passwords_found">Nenhuma senha encontrada...</string>
+    <string name="welocome">Bem-vindo: </string>
+    <string name="password_counter">Senhas Salvas: </string>
+    <string name="delete_password">Deseja excluir a senha?</string>
+    <string name="edit_password">Deseja editar o nome da senha?</string>
+    <string name="hint_edit_password">Digite novo nome</string>
+
+    <!-- Drawer -->
+    <string name="user">Usuário</string>
 
     <!-- Password Recovery -->
     <!-- Títulos -->

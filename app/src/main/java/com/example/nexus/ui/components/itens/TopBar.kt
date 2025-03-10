@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.itens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons

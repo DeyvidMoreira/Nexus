@@ -17,11 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nexus.R
-import com.example.nexus.framework.service.local.dao.PasswordDao
 import com.example.nexus.framework.service.local.entity.PasswordEntity
-import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
-import com.example.nexus.ui.components.PasswordItem
+import com.example.nexus.ui.components.itens.PasswordItem
 import com.example.nexus.ui.theme.DarkMediumGrey
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
@@ -67,7 +65,9 @@ fun DrawerSavedPasswords(
             items(filteredPasswords) { password ->
                 PasswordItem(
                     password = password,
-                    onDelete = { onDelete(password) }
+                    onDelete = { onDelete(password) },
+                    onEdit = { viewModel.editPassword(password) },
+                    viewModel = viewModel
                 )
             }
         }

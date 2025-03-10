@@ -40,106 +40,111 @@ import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
-/**
- * Função composable para a tela de nova senha.
- * Permite que o usuário redefina sua senha.
- *
- * @param navController Controlador de navegação para gerenciar a navegação do aplicativo.
- */
+
 @Composable
 fun NewPassowordScreen(navController: NavController) {
-    var password by rememberSaveable { mutableStateOf("") }
-    var repeatPassword by rememberSaveable { mutableStateOf("") }
 
-    ColumnBackgroundColor {
 
-        // Título com estilo gradiente
-        Text(
-            text = stringResource(id = R.string.txt_new_password_title),
-            fontSize = 22.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            style = TextStyle(
-                brush = Brush.horizontalGradient(
-                    listOf(LightGreen, NeonGreen, MatteGreen)
-                )
+    ColumnBackgroundColor(
+        horizontal = Alignment.CenterHorizontally,
+        vertical = Arrangement.Center
+    ) {
+        TitleArea()
+        SpacerCustom(paddingBottom = 50.dp)
+        CardNewPassword()
+    }
+}
+
+@Composable
+fun TitleArea(){
+
+    // Título com estilo gradiente
+    Text(
+        text = stringResource(id = R.string.txt_new_password_title),
+        fontSize = 22.sp,
+        fontFamily = FontFamily.Monospace,
+        color = Color.White,
+        fontWeight = FontWeight.Bold,
+        style = TextStyle(
+            brush = Brush.horizontalGradient(
+                listOf(LightGreen, NeonGreen, MatteGreen)
             )
         )
+    )
+}
 
-        SpacerCustom(paddingBottom = 50.dp)
-
-        // Cartão com borda animada contendo o formulário de nova senha
-        AnimatedBorderCard(
-            modifier = Modifier
-                .width(300.dp)
-                .padding(all = 2.dp)
-                .height(450.dp),
-            shape = RoundedCornerShape(50.dp, 0.dp, 50.dp, 0.dp),
-            borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
-            animationDuration = 5000
+@Composable
+fun CardNewPassword(){
+    var password by rememberSaveable { mutableStateOf("") }
+    var repeatPassword by rememberSaveable { mutableStateOf("") }
+    // Cartão com borda animada contendo o formulário de nova senha
+    AnimatedBorderCard(
+        modifier = Modifier
+            .width(300.dp)
+            .padding(all = 2.dp)
+            .height(450.dp),
+        shape = RoundedCornerShape(50.dp, 0.dp, 50.dp, 0.dp),
+        borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
+        animationDuration = 5000
+    ) {
+        // Conteúdo do formulário
+        Column(
+            modifier = Modifier.padding(all = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Conteúdo do formulário
-            Column(
-                modifier = Modifier.padding(all = 24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Texto de instrução
-                TextCustom(
-                    text = stringResource(id = R.string.txt_new_password),
-                    fontSize = 20.sp
-                )
+            // Texto de instrução
+            TextCustom(
+                text = stringResource(id = R.string.txt_new_password),
+                fontSize = 20.sp
+            )
 
-                SpacerCustom(paddingBottom = 15.dp)
+            SpacerCustom(paddingBottom = 15.dp)
 
-                // Campo de entrada para a nova senha
-                TextFieldCustom(
-                    value = password,
-                    onValueChange = { password = it },
-                    hint = stringResource(id = R.string.hint_password_register),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
-                    icon = R.drawable.ic_pwd,
-                    visualTransformation = PasswordVisualTransformation()
-                )
+            // Campo de entrada para a nova senha
+            TextFieldCustom(
+                value = password,
+                onValueChange = { password = it },
+                hint = stringResource(id = R.string.hint_password_register),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.NumberPassword
+                ),
+                icon = R.drawable.ic_pwd,
+                visualTransformation = PasswordVisualTransformation()
+            )
 
-                SpacerCustom(paddingBottom = 15.dp)
+            SpacerCustom(paddingBottom = 15.dp)
 
-                // Campo de entrada para repetir a nova senha
-                TextFieldCustom(
-                    value = repeatPassword,
-                    onValueChange = { repeatPassword = it },
-                    hint = stringResource(id = R.string.hint_repeat_password),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
-                    icon = R.drawable.ic_pwd,
-                    visualTransformation = PasswordVisualTransformation()
-                )
+            // Campo de entrada para repetir a nova senha
+            TextFieldCustom(
+                value = repeatPassword,
+                onValueChange = { repeatPassword = it },
+                hint = stringResource(id = R.string.hint_repeat_password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.NumberPassword
+                ),
+                icon = R.drawable.ic_pwd,
+                visualTransformation = PasswordVisualTransformation()
+            )
 
-                SpacerCustom(paddingBottom = 50.dp)
+            SpacerCustom(paddingBottom = 50.dp)
 
-                // Botão para redefinir a senha
-                ButtomCustom(
-                    onClick = {
-                        InputValidation.validatePassword(password)
-                        InputValidation.validateRepeatPassword(password, repeatPassword)
-                        // Lógica adicional para redefinir a senha
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.bnt_refresh_password),
-                        color = DarkGrey
-                    )
+            // Botão para redefinir a senha
+            ButtomCustom(
+                onClick = {
+                    InputValidation.validatePassword(password)
+                    InputValidation.validateRepeatPassword(password, repeatPassword)
+                    // Lógica adicional para redefinir a senha
                 }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.bnt_refresh_password),
+                    color = DarkGrey
+                )
             }
         }
     }
 }
-
-
 @Preview
 @Composable
 private fun NewPassowrdScreenPreview() {

@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.elements
 
 
 import androidx.compose.foundation.layout.fillMaxWidth

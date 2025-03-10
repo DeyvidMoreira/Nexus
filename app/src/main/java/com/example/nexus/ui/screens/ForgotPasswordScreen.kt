@@ -38,70 +38,83 @@ import com.example.nexus.ui.theme.components.TextFieldCustom
 
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
+
+
+    ColumnBackgroundColor(
+        horizontal = Alignment.CenterHorizontally,
+        vertical = Arrangement.Center
+    ) {
+        TitleForgotPassword()
+        SpacerCustom(paddingBottom = 50.dp)
+        CardForgotPassword()
+    }
+}
+
+@Composable
+fun TitleForgotPassword() {
+    // Título
+    TextCustom(
+        text = stringResource(id = R.string.txt_title_forgot_password),
+        fontSize = 22.sp
+    )
+}
+
+@Composable
+fun CardForgotPassword() {
     var userEmail by rememberSaveable { mutableStateOf("") }
 
-    ColumnBackgroundColor {
-        // Título
-        TextCustom(
-            text = stringResource(id = R.string.txt_title_forgot_password),
-            fontSize = 22.sp
-        )
-
-        SpacerCustom(paddingBottom = 50.dp)
-
-        // Cartão com borda animada contendo o formulário de solicitação
-        AnimatedBorderCard(
-            modifier = Modifier
-                .width(300.dp)
-                .padding(all = 2.dp)
-                .height(450.dp),
-            shape = RoundedCornerShape(50.dp, 0.dp, 50.dp, 0.dp),
-            borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
-            animationDuration = 5000
+    // Cartão com borda animada contendo o formulário de solicitação
+    AnimatedBorderCard(
+        modifier = Modifier
+            .width(300.dp)
+            .padding(all = 2.dp)
+            .height(450.dp),
+        shape = RoundedCornerShape(50.dp, 0.dp, 50.dp, 0.dp),
+        borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
+        animationDuration = 5000
+    ) {
+        // Conteúdo do formulário
+        Column(
+            modifier = Modifier.padding(all = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Conteúdo do formulário
-            Column(
-                modifier = Modifier.padding(all = 24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Mensagem de instrução
-                TextCustom(
-                    text = stringResource(id = R.string.txt_message_send_email),
-                    fontSize = 18.sp
-                )
+            // Mensagem de instrução
+            TextCustom(
+                text = stringResource(id = R.string.txt_message_send_email),
+                fontSize = 18.sp
+            )
 
-                SpacerCustom(paddingBottom = 30.dp)
+            SpacerCustom(paddingBottom = 30.dp)
 
-                // Campo de entrada para o email
-                TextFieldCustom(
-                    value = userEmail,
-                    onValueChange = { userEmail = it },
-                    hint = stringResource(id = R.string.hint_email_request),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email
-                    ),
-                    icon = R.drawable.icon_email
-                )
+            // Campo de entrada para o email
+            TextFieldCustom(
+                value = userEmail,
+                onValueChange = { userEmail = it },
+                hint = stringResource(id = R.string.hint_email_request),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                icon = R.drawable.icon_email
+            )
 
-                SpacerCustom(paddingBottom = 30.dp)
+            SpacerCustom(paddingBottom = 30.dp)
 
-                // Botão para enviar o link de redefinição
-                ButtomCustom(
-                    onClick = {
-                        val error = InputValidation.validateEmail(userEmail)
-                        if (error == null) {
-                            // Lógica para enviar o email de redefinição
-                        } else {
-                            // Exibir mensagem de erro
-                        }
+            // Botão para enviar o link de redefinição
+            ButtomCustom(
+                onClick = {
+                    val error = InputValidation.validateEmail(userEmail)
+                    if (error == null) {
+                        // Lógica para enviar o email de redefinição
+                    } else {
+                        // Exibir mensagem de erro
                     }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_send_code),
-                        color = DarkGrey
-                    )
                 }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.btn_send_code),
+                    color = DarkGrey
+                )
             }
         }
     }

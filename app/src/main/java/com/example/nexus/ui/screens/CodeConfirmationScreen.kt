@@ -38,7 +38,10 @@ fun CodeConfirmationScreen(navController: NavController) {
 
     var code by remember { mutableStateOf("") }
 
-    ColumnBackgroundColor {
+    ColumnBackgroundColor (
+        horizontal = Alignment.CenterHorizontally,
+        vertical = Arrangement.Center
+    ){
         TextCustom(
             text = "",
             fontSize = 22.sp

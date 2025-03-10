@@ -1,4 +1,4 @@
-package com.example.nexus.ui.components
+package com.example.nexus.ui.components.texts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

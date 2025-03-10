@@ -1,7 +1,5 @@
 package com.example.nexus.ui.navigation
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -14,8 +12,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
-import com.example.nexus.ui.components.PasswordModalBottomSheet
-import com.example.nexus.ui.components.SavePasswordDialog
+import com.example.nexus.ui.components.itens.PasswordModalBottomSheet
+import com.example.nexus.ui.components.dialogs.SavePasswordDialog
 import com.example.nexus.ui.navigation.routes.MainNavigationGraph
 import com.example.nexus.ui.screens.PasswordGeneratorScreen
 import com.example.nexus.ui.theme.DarkGrey
@@ -61,11 +59,15 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
             ) {
                 PasswordModalBottomSheet(
                     viewModel = viewModel,
-                    onDelete = { password -> viewModel.deletePassword(password) }
+                    onDelete = { password -> viewModel.deletePassword(password) },
+                    onEdit = { password -> viewModel.editPassword(password) }
                 )
             }
         }
     }
+
+
+
 
 }
 

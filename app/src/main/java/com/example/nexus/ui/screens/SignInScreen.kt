@@ -1,7 +1,5 @@
 package com.example.nexus.ui.theme.screens
 
-
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,9 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexus.R
 import com.example.nexus.framework.service.remote.entity.UserModel
-import com.example.nexus.ui.components.CustomMessageBox
-import com.example.nexus.ui.components.CustomSwitch
-import com.example.nexus.ui.components.TextButtonCustom
+import com.example.nexus.ui.components.texts.CustomMessageBox
+import com.example.nexus.ui.components.options.CustomSwitch
+import com.example.nexus.ui.components.buttons.TextButtonCustom
 import com.example.nexus.ui.states.SignInState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
@@ -56,11 +54,14 @@ fun SignInScreen(
     onNavigationToForgotPassword: () -> Unit = {},
     onNavigationToSignUp: () -> Unit = {},
 
-) {
+    ) {
     val warningMessage by rememberSaveable { mutableStateOf<String?>(null) }
     val currentWarningMessage = warningMessage ?: uiState.warningMessage
 
-    ColumnBackgroundColor {
+    ColumnBackgroundColor(
+        horizontal = Alignment.CenterHorizontally,
+        vertical = Arrangement.Center
+    ) {
         currentWarningMessage?.let { message ->
             Box(contentAlignment = Alignment.TopCenter) {
                 CustomMessageBox(
