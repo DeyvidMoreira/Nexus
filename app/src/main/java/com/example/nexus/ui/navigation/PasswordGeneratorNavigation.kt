@@ -60,7 +60,8 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
                 PasswordModalBottomSheet(
                     viewModel = viewModel,
                     onDelete = { password -> viewModel.deletePassword(password) },
-                    onEdit = { password -> viewModel.editPassword(password) }
+                    onEdit = { password -> viewModel.editPassword(password) },
+                    uiState = uiState
                 )
             }
         }

@@ -4,6 +4,7 @@ import com.example.nexus.ui.until.WarningMessage
 
 object ConstantsMessages {
 
+    const val MESSAGE_PASSWORD_COPIED = "Senha copiada."
     const val MESSAGE_NO_SELECTED_OPTION = "Selecione pelo menos uma opção."
     const val MESSAGE_NO_PASSWORD_LENGTH = "Informe o comprimento da senha."
     const val MESSAGE_NO_TAG= "Informe um Título para a senha."

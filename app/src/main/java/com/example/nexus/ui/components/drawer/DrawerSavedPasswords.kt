@@ -20,11 +20,13 @@ import com.example.nexus.R
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.components.itens.PasswordItem
+import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkMediumGrey
 import com.example.nexus.ui.theme.components.TextFieldCustom
 
 @Composable
 fun DrawerSavedPasswords(
+    uiState: GeneratorState,
     viewModel: PwdGeneratorViewModel,
     onDelete: (PasswordEntity) -> Unit,
 ){
@@ -67,7 +69,8 @@ fun DrawerSavedPasswords(
                     password = password,
                     onDelete = { onDelete(password) },
                     onEdit = { viewModel.editPassword(password) },
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    uiState = uiState
                 )
             }
         }

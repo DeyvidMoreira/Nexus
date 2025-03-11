@@ -31,6 +31,7 @@ import com.example.nexus.R
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.components.dialogs.DeleteDialog
+import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.MatteGreen
@@ -42,7 +43,8 @@ import com.example.nexus.ui.theme.components.TextCustom
 fun PasswordModalBottomSheet(
     viewModel: PwdGeneratorViewModel,
     onDelete: (PasswordEntity) -> Unit,
-    onEdit: (PasswordEntity) -> Unit
+    onEdit: (PasswordEntity) -> Unit,
+    uiState: GeneratorState
 ) {
     val passwords by viewModel.passwords.observeAsState(emptyList())
     val filteredPasswords by viewModel.filteredPasswords.observeAsState(emptyList())
@@ -132,7 +134,8 @@ fun PasswordModalBottomSheet(
                             password = password,
                             onDelete = { onDelete(password) },
                             onEdit = { onEdit(password) },
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            uiState = uiState
                         )
                     }
                 } catch (e: Exception) {

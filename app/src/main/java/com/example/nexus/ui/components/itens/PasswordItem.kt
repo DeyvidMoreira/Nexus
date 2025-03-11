@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Edit
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,20 +35,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexus.R
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.until.toFormattedDate
 import com.example.nexus.framework.service.local.until.toFormattedTime
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.components.dialogs.DeleteDialog
 import com.example.nexus.ui.components.dialogs.EditPasswordDialog
+import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.NeonGreen
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
+import com.example.nexus.ui.until.ClipboardHelper
+import com.example.nexus.ui.until.WarningMessage
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -55,12 +65,14 @@ fun PasswordItem(
     password: PasswordEntity,
     onDelete: () -> Unit,
     onEdit: () -> Unit,
-    viewModel: PwdGeneratorViewModel
+    viewModel: PwdGeneratorViewModel,
+    uiState: GeneratorState
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
     var passwordToEdit by remember { mutableStateOf<PasswordEntity?>(null) }
     var swipeToDismissEnabled by remember { mutableStateOf(true) }
+    val clipboardManager = LocalClipboardManager.current
 
     val dismissState = rememberDismissState(
         confirmStateChange = {
@@ -83,7 +95,7 @@ fun PasswordItem(
     )
 
     //Resetar o dismiss
-    LaunchedEffect (showEditDialog, showDeleteDialog){
+    LaunchedEffect(showEditDialog, showDeleteDialog) {
         if (showEditDialog || showDeleteDialog) {
             dismissState.reset()
         }
@@ -187,6 +199,23 @@ fun PasswordItem(
                             )
                         }
                     }
+
+                    IconButton(
+                        modifier = Modifier
+                            .padding(2.dp),
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(password.password))
+                            uiState.isPasswordCopied = true
+                            WarningMessage.setMessage("Senha copiada com sucesso!")
+                        },
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_copy),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp),
+                            tint = NeonGreen
+                        )
+                    }
                 }
             }
         )
@@ -237,5 +266,4 @@ fun PasswordItem(
 @Preview
 @Composable
 fun PasswordItemPreview() {
-
 }

@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,6 +52,7 @@ import com.example.nexus.ui.theme.components.ButtomCustom
 import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
+import com.example.nexus.ui.until.ClipboardHelper
 import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsCharacters
 
@@ -71,7 +78,7 @@ fun PasswordGeneratorScreen(
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        Drawer (navController){ onOpenDrawer ->
+        Drawer(navController) { onOpenDrawer ->
             Scaffold(
                 topBar = {
                     TopBar(onOpenDrawer = onOpenDrawer)
@@ -81,7 +88,7 @@ fun PasswordGeneratorScreen(
                 ColumnBackgroundColor(
                     horizontal = Alignment.CenterHorizontally,
                     vertical = Arrangement.Center
-                )    {
+                ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -124,7 +131,7 @@ fun PasswordGeneratorScreen(
 fun HeaderArea(uiState: GeneratorState) {
     val warningMessage by WarningMessage.message.collectAsState()
     val currentWarningMessage = warningMessage
-
+    val context = LocalContext.current
     // Mensagem de aviso
     currentWarningMessage?.let { message ->
         Box(
@@ -132,7 +139,7 @@ fun HeaderArea(uiState: GeneratorState) {
         ) {
             CustomMessageBox(
                 message = message,
-                isSuccess = uiState.isPasswordSaved
+                isSuccess = uiState.isPasswordSaved || uiState.isPasswordCopied
             )
         }
     }
@@ -150,30 +157,57 @@ fun HeaderArea(uiState: GeneratorState) {
         TextCustom(text = "")
 
     }
-    //Senha gerada
-    Card(
-        modifier = Modifier
-            .width(280.dp),
-        shape = RoundedCornerShape(30.dp, 0.dp, 30.dp, 0.dp),
-        colors = CardDefaults.cardColors(MediumGrey),
-        elevation = CardDefaults.cardElevation(15.dp),
 
-        ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            uiState.generatedPassword?.let { password ->
-                Text(
-                    text = password,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = NeonGreen,
-                    fontFamily = FontFamily.Monospace
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (uiState.generatedPassword != null) {
+            IconButton(
+                modifier = Modifier
+                    .padding(2.dp),
+                onClick = {
+                    uiState.generatedPassword?.let { password ->
+                        ClipboardHelper().copyClipboard(context, password, uiState)
+                    }
+                },
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_copy),
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp),
+                    tint = NeonGreen
                 )
+            }
+        }
+
+        //Senha gerada
+        Card(
+            modifier = Modifier
+                .width(280.dp),
+            shape = RoundedCornerShape(30.dp, 0.dp, 30.dp, 0.dp),
+            colors = CardDefaults.cardColors(MediumGrey),
+            elevation = CardDefaults.cardElevation(15.dp),
+
+            ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                uiState.generatedPassword?.let { password ->
+                    Text(
+                        text = password,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        color = NeonGreen,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
             }
         }
     }

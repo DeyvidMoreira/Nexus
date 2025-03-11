@@ -1,6 +1,10 @@
 package com.example.nexus.ui.ViewModels
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -31,7 +35,6 @@ class PwdGeneratorViewModel(
     val passwords = passwordRepository.allPasswords.asLiveData()
 
     private val _searchQuery = MutableStateFlow("")
-
 
     init {
         viewModelScope.launch {
@@ -164,6 +167,7 @@ class PwdGeneratorViewModel(
             }
         }
     }
+
 
 
 }

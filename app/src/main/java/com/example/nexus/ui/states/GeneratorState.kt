@@ -17,5 +17,6 @@ data class GeneratorState(
     val onGeneratePassword: () -> Unit = {},
     val generatePassword: () -> Unit = {},
     val isPasswordSaved: Boolean = false,
+    var isPasswordCopied: Boolean = false,
     val warningMessage: String? = null,
 )
