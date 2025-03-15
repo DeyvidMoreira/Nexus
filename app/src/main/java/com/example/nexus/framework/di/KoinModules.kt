@@ -11,6 +11,7 @@ import com.example.nexus.framework.service.remote.repository.FirebaseAuthReposit
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.ViewModels.SignInViewModel
 import com.example.nexus.ui.ViewModels.SignUpViewModel
+import com.example.nexus.ui.until.CryptoHelper
 import com.example.nexus.ui.until.UserPreferences
 import com.example.pwdcripto.framework.contants.ConstantsDatabase
 import com.google.firebase.auth.ktx.auth
@@ -22,18 +23,25 @@ import org.koin.dsl.module
 
 
 @RequiresApi(Build.VERSION_CODES.R)
-val appModule = module {
+// Módulo de ViewModels
+val viewModelModule = module {
     viewModelOf(::SignUpViewModel)
     viewModelOf(::SignInViewModel)
-    single{ UserPreferences(androidContext()) }
     viewModelOf(::PwdGeneratorViewModel)
-    //viewModel { PwdGeneratorViewModel(get()) }
 }
 
+// Módulo de dependências de segurança
+val securityModule = module {
+    single { CryptoHelper(androidContext()) }
+    single { UserPreferences(androidContext()) }
+}
+
+// Módulo de armazenamento de dados
 val storangeModule = module {
     singleOf(::FirebaseAuthRepository)
 }
 
+// Módulo de banco de dados local
 val localStorageModule = module {
     single {
         Room.databaseBuilder(
@@ -47,12 +55,17 @@ val localStorageModule = module {
             .build()
     }
     single { get<AppDatabase>().passwordDao() }
-    single { PasswordRepository(get()) }
+    single { PasswordRepository(
+        passwordDao = get(),
+        cryptoHelper = get()
+    ) }
 }
 
+// Módulo de Firebase
 val firebaseModule = module {
-    single{
+    single {
         Firebase
             .auth
     }
 }
+

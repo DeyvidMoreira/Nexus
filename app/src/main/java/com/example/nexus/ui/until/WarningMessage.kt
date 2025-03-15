@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 object WarningMessage {
     private val _message = MutableStateFlow<String?>(null)
@@ -16,7 +17,7 @@ object WarningMessage {
         _message.value = message
         message?.let {
             CoroutineScope(Dispatchers.Main).launch {
-                delay(3000)
+                delay(3.seconds)
                 _message.value = null
             }
         }

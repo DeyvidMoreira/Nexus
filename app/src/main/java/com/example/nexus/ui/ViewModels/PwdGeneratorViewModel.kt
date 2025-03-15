@@ -12,6 +12,7 @@ import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.GeneratorState
+import com.example.nexus.ui.until.CryptoHelper
 import com.example.nexus.ui.until.PasswordValidator
 import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsCharacters
@@ -27,7 +28,8 @@ import kotlinx.coroutines.launch
 
 class PwdGeneratorViewModel(
     private val passwordRepository: PasswordRepository,
-    private val firebaseAuthRepository: FirebaseAuthRepository
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+    private val cryptoHelper: CryptoHelper
 ) : ViewModel() {
     private val _state = MutableStateFlow(GeneratorState())
     val state: StateFlow<GeneratorState> = _state.asStateFlow()
@@ -103,6 +105,7 @@ class PwdGeneratorViewModel(
         }
     }
 
+    //Salvar senha usando AES
     fun savePassword(tag: String, password: String) {
         val error = PasswordValidator.validate(tag, _state.value.generatedPassword ?: "")
         val generatedPassword = _state.value.generatedPassword
@@ -114,13 +117,18 @@ class PwdGeneratorViewModel(
             WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_TAG)
             return
         }
+        //Gera a chave secreta
+        val secretKey = cryptoHelper.getOrCreateSecretKey()
+
+        //Criptografa a senha antes de salvar
+        val encryptedPassword = cryptoHelper.encryptLocalData(password, secretKey)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 passwordRepository.savePassword(
                     PasswordEntity(
                         tag = tag,
-                        password = _state.value.generatedPassword ?: ""
+                        password = encryptedPassword
                     )
                 )
                 _state.update { currentState ->
@@ -134,16 +142,21 @@ class PwdGeneratorViewModel(
         }
     }
 
-    // Função para buscar senhas filtradas pela tag
+    // Buscar senhas filtradas pela tag
     fun getPasswordsByTag(query: String) {
         _searchQuery.value = query
     }
 
-    // Função para editar uma senha
+    // Editar uma senha
     fun editPassword(password: PasswordEntity) {
+        val secretKey = cryptoHelper.getOrCreateSecretKey()
+        val decryptedPassword = cryptoHelper.decryptLocalData(password.password, secretKey)
         try {
+
             viewModelScope.launch(Dispatchers.IO) {
-                passwordRepository.updatePassword(password)
+                passwordRepository.updatePassword(
+                    password.copy(password = decryptedPassword)
+                )
             }
         } catch (e: Exception) {
             Log.e("PwdGeneratorViewModel", "Erro ao editar senha", e)
@@ -157,6 +170,17 @@ class PwdGeneratorViewModel(
         }
     }
 
+    //Função para Exibir a senha descriptografada
+    fun getDecryptedPassword(passwordEntity: PasswordEntity): String {
+        return try {
+            val secretKey = cryptoHelper.getOrCreateSecretKey()
+            cryptoHelper.decryptLocalData(passwordEntity.password, secretKey)
+        } catch (e: Exception) {
+            Log.e("DEBUG", "Falha ao descriptografar: ${e.message}", e)
+            "ERRO"
+        }
+    }
+
     // Função Logout
     fun logout() {
         viewModelScope.launch {
@@ -167,7 +191,6 @@ class PwdGeneratorViewModel(
             }
         }
     }
-
 
 
 }

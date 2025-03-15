@@ -1,6 +1,7 @@
 package com.example.nexus.ui.components.itens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.DismissDirection
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -37,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +50,7 @@ import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.until.toFormattedDate
 import com.example.nexus.framework.service.local.until.toFormattedTime
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
+import com.example.nexus.ui.components.buttons.TextButtonCustom
 import com.example.nexus.ui.components.dialogs.DeleteDialog
 import com.example.nexus.ui.components.dialogs.EditPasswordDialog
 import com.example.nexus.ui.states.GeneratorState
@@ -56,8 +58,9 @@ import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.NeonGreen
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
-import com.example.nexus.ui.until.ClipboardHelper
+import kotlinx.coroutines.delay
 import com.example.nexus.ui.until.WarningMessage
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -71,8 +74,42 @@ fun PasswordItem(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
     var passwordToEdit by remember { mutableStateOf<PasswordEntity?>(null) }
+    var isPasswordReveled by remember { mutableStateOf(false) }
     var swipeToDismissEnabled by remember { mutableStateOf(true) }
     val clipboardManager = LocalClipboardManager.current
+
+    var showPasswordDialog by remember { mutableStateOf(false) }
+
+    //Dialog de revelar senha
+    if (showPasswordDialog) {
+        AlertDialog(
+            onDismissRequest = { showPasswordDialog = false },
+            title = { TextCustom(text = "Revela Senha") },
+            text = { TextCustom(text = "Deseja ver a senha?") },
+            confirmButton = {
+                TextButtonCustom(
+                    onClick = {
+                        showPasswordDialog = false
+                        isPasswordReveled = true
+                    }
+                ) {
+                    TextCustom(text = "Sim")
+                }
+            },
+            dismissButton = {
+                TextButtonCustom(
+                    onClick = {
+                        showPasswordDialog = false
+                        isPasswordReveled = false
+                    }
+                ) {
+                    TextCustom(text = "Não")
+                }
+            }
+
+        )
+    }
+
 
     val dismissState = rememberDismissState(
         confirmStateChange = {
@@ -98,6 +135,10 @@ fun PasswordItem(
     LaunchedEffect(showEditDialog, showDeleteDialog) {
         if (showEditDialog || showDeleteDialog) {
             dismissState.reset()
+        }
+        if (isPasswordReveled) {
+            delay(30.seconds)
+            isPasswordReveled = false
         }
     }
 
@@ -173,7 +214,9 @@ fun PasswordItem(
                         .padding(16.dp),
                 ) {
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { showPasswordDialog = true }
                     ) {
                         TextCustom(
                             text = password.tag,
@@ -182,7 +225,7 @@ fun PasswordItem(
                             fontSize = 18.sp
                         )
                         TextCustom(
-                            text = password.password,
+                            text = if (isPasswordReveled) viewModel.getDecryptedPassword(password) else "*******",
                             style = MaterialTheme.typography.bodyMedium,
                             fontSize = 16.sp
                         )
@@ -204,9 +247,14 @@ fun PasswordItem(
                         modifier = Modifier
                             .padding(2.dp),
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(password.password))
-                            uiState.isPasswordCopied = true
-                            WarningMessage.setMessage("Senha copiada com sucesso!")
+                            if (isPasswordReveled) {
+                                val decryptedPassword = viewModel.getDecryptedPassword(password)
+                                clipboardManager.setText(AnnotatedString(decryptedPassword))
+                                uiState.isPasswordCopied = true
+                                WarningMessage.setMessage("Senha copiada com sucesso!")
+                            } else {
+                                WarningMessage.setMessage("Revela a senha antes de copiar!")
+                            }
                         },
                     ) {
                         Icon(
@@ -219,49 +267,8 @@ fun PasswordItem(
                 }
             }
         )
-    } else {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .background(
-                    color = DarkGrey,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(16.dp),
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                TextCustom(
-                    text = password.tag,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                TextCustom(
-                    text = password.password,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row {
-                    TextCustom(
-                        text = "Data: ${password.createdAt.toFormattedDate()}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    SpacerCustom(paddingEnd = 32.dp)
-                    TextCustom(
-                        text = "Hora: ${password.createdAt.toFormattedTime()}",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-        }
     }
 }
-
 
 @Preview
 @Composable
