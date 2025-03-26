@@ -48,7 +48,7 @@ class PasswordRepository(
     // Função para editar uma senha
     suspend fun updatePassword(passwordEntity: PasswordEntity) {
         val encryptedPassword = passwordEntity.copy(
-            password = cryptoHelper.encryptLocalData(passwordEntity.password,secreKey)
+            password = cryptoHelper.encryptLocalData(passwordEntity.password, secreKey)
         )
         passwordDao.updatePassword(encryptedPassword)
     }

@@ -4,6 +4,7 @@ package com.example.nexus.core.di
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.nexus.framework.service.local.AppDatabase
 import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.framework.service.local.until.getDatabaseMigrations
@@ -49,9 +50,8 @@ val localStorageModule = module {
             AppDatabase::class.java,
             ConstantsDatabase.DATA_BASE_NAME
         )
-            .addMigrations(
-                *getDatabaseMigrations()
-            )
+            .addMigrations(*getDatabaseMigrations())
+            .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
     }
     single { get<AppDatabase>().passwordDao() }

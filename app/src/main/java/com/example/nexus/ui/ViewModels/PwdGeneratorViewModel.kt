@@ -1,10 +1,6 @@
 package com.example.nexus.ui.ViewModels
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -149,19 +145,15 @@ class PwdGeneratorViewModel(
 
     // Editar uma senha
     fun editPassword(password: PasswordEntity) {
-        val secretKey = cryptoHelper.getOrCreateSecretKey()
-        val decryptedPassword = cryptoHelper.decryptLocalData(password.password, secretKey)
         try {
-
             viewModelScope.launch(Dispatchers.IO) {
-                passwordRepository.updatePassword(
-                    password.copy(password = decryptedPassword)
-                )
+                passwordRepository.updatePassword(password)
             }
         } catch (e: Exception) {
             Log.e("PwdGeneratorViewModel", "Erro ao editar senha", e)
         }
     }
+
 
     // Função para deletar uma senha
     fun deletePassword(password: PasswordEntity) {

@@ -3,78 +3,72 @@ package com.example.nexus.framework.service.local.until
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.pwdcripto.framework.contants.ConstantsDatabase
-import com.example.pwdcripto.framework.contants.ConstantsDatabase.NEXT_VERSION_DATABASE
-import com.example.pwdcripto.framework.contants.ConstantsDatabase.VERSION_DATABASE
 
 fun getDatabaseMigrations(): Array<Migration> {
-    return arrayOf(
-        // Migração de versão
-        Migration(VERSION_DATABASE, NEXT_VERSION_DATABASE) { database ->
-            performMigration(database, 1) // Chama a função performMigration passando o número da migração
+    return ConstantsDatabase.migrations.map { (targetVersion, strategy) ->
+        Migration(targetVersion - 1, targetVersion) { database ->
+            applyMigrationStrategy(database, strategy, targetVersion)
         }
-    )
+    }.toTypedArray()
 }
 
-// Função para obter a estratégia de migração com base no número
-fun getMigrationStrategy(migrationNumber: Int): MigrationStrategy {
-    return when (migrationNumber) {
-        1 -> MigrationStrategy.ADD_NEW_COLUMN
-        2 -> MigrationStrategy.REMOVE_UNUSED_COLUMN
-        3 -> MigrationStrategy.CHANGE_COLUMN_TYPE
-        4 -> MigrationStrategy.RESET_TABLE
-        else -> throw IllegalArgumentException("Estratégia de migração inválida.")
-    }
-}
-
-// Função para aplicar a estratégia de migração de acordo com o número
-fun performMigration(database: SupportSQLiteDatabase, migrationNumber: Int) {
-    val strategy = getMigrationStrategy(migrationNumber) // Obtém a estratégia de migração
-
+private fun applyMigrationStrategy(
+    database: SupportSQLiteDatabase,
+    strategy: MigrationStrategy,
+    version: Int
+) {
     when (strategy) {
-        MigrationStrategy.ADD_NEW_COLUMN -> {
-            // Exemplo de adicionar uma nova coluna
-            database.execSQL(
-                "ALTER TABLE ${ConstantsDatabase.TABLE_NAME} ADD COLUMN new_column TEXT"
-            )
-        }
-        MigrationStrategy.REMOVE_UNUSED_COLUMN -> {
-            // Exemplo de lógica para remover uma coluna.
-            // Remover colunas no SQLite não é direto, então geralmente é necessário recriar a tabela.
-            // Aqui você teria que reestruturar a tabela para excluir a coluna indesejada.
-            // Isso pode ser feito com a recriação da tabela.
-            database.execSQL("DROP TABLE IF EXISTS ${ConstantsDatabase.TABLE_NAME}")
-            database.execSQL(
-                "CREATE TABLE ${ConstantsDatabase.TABLE_NAME} (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "tag TEXT NOT NULL, " +
-                        "password TEXT NOT NULL, " +
-                        "createdAt INTEGER NOT NULL)"
-            )
-        }
-        MigrationStrategy.CHANGE_COLUMN_TYPE -> {
-            // Exemplo de mudança de tipo de coluna
-            // O SQLite não oferece um comando direto para alterar o tipo de uma coluna
-            // Então, você precisaria recriar a tabela para suportar isso
-            database.execSQL("DROP TABLE IF EXISTS ${ConstantsDatabase.TABLE_NAME}")
-            database.execSQL(
-                "CREATE TABLE ${ConstantsDatabase.TABLE_NAME} (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "tag TEXT NOT NULL, " +
-                        "password TEXT NOT NULL, " +
-                        "createdAt INTEGER NOT NULL, " +
-                        "new_column TEXT)"
-            )
-        }
-        MigrationStrategy.RESET_TABLE -> {
-            // Exemplo de resetar a tabela completamente (deletando e recriando)
-            database.execSQL("DROP TABLE IF EXISTS ${ConstantsDatabase.TABLE_NAME}")
-            database.execSQL(
-                "CREATE TABLE ${ConstantsDatabase.TABLE_NAME} (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "tag TEXT NOT NULL, " +
-                        "password TEXT NOT NULL, " +
-                        "createdAt INTEGER NOT NULL)"
-            )
-        }
+        MigrationStrategy.ADD_NEW_COLUMN -> addColumn(database, version)
+        MigrationStrategy.REMOVE_UNUSED_COLUMN -> removeColumn(database, version)
+        MigrationStrategy.CHANGE_COLUMN_TYPE -> changeColumnType(database, version)
+        MigrationStrategy.RESET_TABLE -> resetTable(database)
     }
+}
+
+private fun addColumn(database: SupportSQLiteDatabase, version: Int) {
+    when (version) {
+        1 -> database.execSQL("ALTER TABLE ${ConstantsDatabase.TABLE_NAME} ADD COLUMN new_column TEXT")
+        3 -> database.execSQL("ALTER TABLE ${ConstantsDatabase.TABLE_NAME} ADD COLUMN another_column INTEGER")
+    }
+}
+
+private fun removeColumn(database: SupportSQLiteDatabase, version: Int) {
+    // Implementação segura para versões antigas
+    database.execSQL("""
+        CREATE TABLE temp_table (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tag TEXT NOT NULL,
+            password TEXT NOT NULL,
+            createdAt INTEGER NOT NULL
+        )
+    """)
+
+    database.execSQL("""
+        INSERT INTO temp_table(id, tag, password, createdAt)
+        SELECT id, tag, password, createdAt 
+        FROM ${ConstantsDatabase.TABLE_NAME}
+    """)
+
+    database.execSQL("DROP TABLE ${ConstantsDatabase.TABLE_NAME}")
+    database.execSQL("ALTER TABLE temp_table RENAME TO ${ConstantsDatabase.TABLE_NAME}")
+}
+
+private fun changeColumnType(database: SupportSQLiteDatabase, version: Int) {
+    // Exemplo para versão 3
+    database.execSQL("ALTER TABLE ${ConstantsDatabase.TABLE_NAME} RENAME COLUMN old_column TO tmp_column")
+    database.execSQL("ALTER TABLE ${ConstantsDatabase.TABLE_NAME} ADD COLUMN old_column INTEGER")
+    database.execSQL("UPDATE ${ConstantsDatabase.TABLE_NAME} SET old_column = CAST(tmp_column AS INTEGER)")
+    database.execSQL("ALTER TABLE ${ConstantsDatabase.TABLE_NAME} DROP COLUMN tmp_column")
+}
+
+private fun resetTable(database: SupportSQLiteDatabase) {
+    database.execSQL("DROP TABLE IF EXISTS ${ConstantsDatabase.TABLE_NAME}")
+    database.execSQL("""
+        CREATE TABLE ${ConstantsDatabase.TABLE_NAME} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tag TEXT NOT NULL,
+            password TEXT NOT NULL,
+            createdAt INTEGER NOT NULL
+        )
+    """)
 }

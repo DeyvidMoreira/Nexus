@@ -11,16 +11,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -81,7 +93,7 @@ fun PasswordGeneratorScreen(
         Drawer(navController) { onOpenDrawer ->
             Scaffold(
                 topBar = {
-                    TopBar(onOpenDrawer = onOpenDrawer)
+                    MyTopBar()
                 }
 
             ) { contentPadding ->
@@ -106,7 +118,7 @@ fun PasswordGeneratorScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top,
                     ) {
-                        SpacerCustom(paddingBottom = 32.dp)
+                        SpacerCustom(paddingBottom = 8.dp)
                         HeaderArea(uiState)
                         SpacerCustom(paddingBottom = 16.dp)
                         OptionsArea(
@@ -126,6 +138,51 @@ fun PasswordGeneratorScreen(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyTopBar() {
+
+    var expanded by remember { mutableStateOf(false) }
+
+    TopAppBar(
+        title = { },
+        actions = {
+            IconButton(onClick = { expanded = true }) {
+                Icon(Icons.Default.Settings, contentDescription = "Menu", tint = NeonGreen)
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { TextCustom("Configurações") },
+                    onClick = {
+                        expanded = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { TextCustom("Sobre") },
+                    onClick = {
+                        expanded = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { TextCustom("Logout") },
+                    onClick = {
+                        expanded = false
+                    }
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent,
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White
+        )
+    )
+}
+
 
 @Composable
 fun HeaderArea(uiState: GeneratorState) {
@@ -374,4 +431,11 @@ private fun DashboardScreeenErrorPreview() {
     val navController = rememberNavController()
     val uiState = GeneratorState(warningMessage = "Erro ao carregar dados")
     PasswordGeneratorScreen(uiState, navController)
+}
+
+
+@Preview
+@Composable
+private fun MyTopBarPreview() {
+    MyTopBar()
 }
