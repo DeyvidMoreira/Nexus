@@ -78,6 +78,14 @@ class FirebaseAuthRepository (
         }
     }
 
+    suspend fun deleteAccount() {
+        try {
+            firebaseAuth.currentUser?.delete()?.await()
+        } catch (e: FirebaseAuthException) {
+            throw Exception("Erro ao deletar conta: ${e.message}")
+        }
+    }
+
     suspend fun logout() {
         try {
             firebaseAuth.signOut()

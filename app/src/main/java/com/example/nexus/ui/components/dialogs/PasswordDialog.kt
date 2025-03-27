@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,28 +19,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nexus.R
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
+import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.components.ButtomCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun SavePasswordDialog(
     viewModel: PwdGeneratorViewModel,
     onDismiss: () -> Unit,
-    backgroundColor: Color = DarkGrey
+    backgroundColor: Color = DarkGrey,
+    uiState: GeneratorState
 ) {
-     val uiState by viewModel.state.collectAsState()
 
     var passwordTag by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            ButtomCustom (
+            ButtomCustom(
                 onClick = {
                     if (passwordTag.isNotEmpty()) {
                         viewModel.savePassword(passwordTag, uiState.generatedPassword ?: "")
+                        uiState.isPasswordSaved = true
                         onDismiss()
                     }
                 }
@@ -72,7 +77,7 @@ fun SavePasswordDialog(
                     hint = "Tag para a Senha",
                     modifier = Modifier.fillMaxWidth(),
 
-                )
+                    )
             }
         },
         containerColor = backgroundColor,
@@ -82,4 +87,5 @@ fun SavePasswordDialog(
 
 @Composable
 @Preview(showBackground = true)
-fun SavePasswordDialogPreview() {}
+fun SavePasswordDialogPreview() {
+}

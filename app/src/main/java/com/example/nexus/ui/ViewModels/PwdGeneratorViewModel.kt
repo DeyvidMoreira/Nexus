@@ -127,14 +127,12 @@ class PwdGeneratorViewModel(
                         password = encryptedPassword
                     )
                 )
-                _state.update { currentState ->
-                    currentState.copy(isPasswordSaved = true)
-                }
                 WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_SAVED)
             } catch (e: Exception) {
                 Log.e("PwdGeneratorViewModel", ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED, e)
                 WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_NOT_SAVED)
             }
+
         }
     }
 
@@ -154,12 +152,12 @@ class PwdGeneratorViewModel(
         }
     }
 
-
     // Função para deletar uma senha
     fun deletePassword(password: PasswordEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             passwordRepository.deletePassword(password)
         }
+        WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_DELETED)
     }
 
     //Função para Exibir a senha descriptografada
@@ -170,6 +168,32 @@ class PwdGeneratorViewModel(
         } catch (e: Exception) {
             Log.e("DEBUG", "Falha ao descriptografar: ${e.message}", e)
             "ERRO"
+        }
+    }
+
+    // Função para deletar todas as senhas
+    fun deleteAllPasswords() {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                passwordRepository.deleteAllPasswords()
+            }
+        } catch (e: Exception) {
+            Log.e("PwdGeneratorViewModel", "Erro ao deletar todas as senhas", e)
+        }
+        WarningMessage.setMessage(ConstantsMessages.MESSAGE_ALL_PASSWORD_DELETED)
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            try {
+                firebaseAuthRepository.deleteAccount()
+                firebaseAuthRepository.logout()
+                WarningMessage.setMessage(
+                    ConstantsMessages.MESSAGE_ACCOUNT_DELETED
+                )
+            } catch (e: Exception) {
+                Log.e("PwdGeneratorViewModel", "Erro ao deletar conta", e)
+            }
         }
     }
 

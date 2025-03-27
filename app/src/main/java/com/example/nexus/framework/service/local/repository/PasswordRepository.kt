@@ -57,4 +57,9 @@ class PasswordRepository(
     suspend fun deletePassword(passwordEntity: PasswordEntity) {
         passwordDao.deletePassword(passwordEntity)
     }
+
+    // Função para deletar todas as senhas
+    suspend fun deleteAllPasswords() {
+        passwordDao.deleteAllPasswords()
+    }
 }

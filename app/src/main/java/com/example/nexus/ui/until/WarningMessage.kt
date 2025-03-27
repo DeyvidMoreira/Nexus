@@ -17,7 +17,7 @@ object WarningMessage {
         _message.value = message
         message?.let {
             CoroutineScope(Dispatchers.Main).launch {
-                delay(3.seconds)
+                delay(1.seconds)
                 _message.value = null
             }
         }

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.nexus.R
 import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
-import com.example.nexus.ui.components.dialogs.DeleteDialog
+import com.example.nexus.ui.components.dialogs.WarningDialog
 import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
@@ -88,10 +88,11 @@ fun PasswordModalBottomSheet(
         )
 
         if (showDialog.value) {
-            DeleteDialog(
+            WarningDialog(
                 onDismiss = { showDialog.value = false },
                 viewModel = viewModel,
-                password = PasswordEntity()
+                password = PasswordEntity(),
+                onConfirm = { showDialog.value = false }
             )
         }
 

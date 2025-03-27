@@ -47,7 +47,8 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
         if (showDialog) {
             SavePasswordDialog(
                 viewModel = viewModel,
-                onDismiss = { showDialog = false }
+                onDismiss = { showDialog = false },
+                uiState = uiState
             )
         }
 

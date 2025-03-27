@@ -23,7 +23,10 @@ import com.example.nexus.ui.theme.components.ButtomCustom
 import com.example.nexus.ui.theme.components.TextCustom
 
 @Composable
-fun DeleteDialog(
+fun WarningDialog(
+    title: String = "",
+    message: String = "",
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     backgroundColor: Color = DarkGrey,
     viewModel: PwdGeneratorViewModel,
@@ -36,7 +39,7 @@ fun DeleteDialog(
         confirmButton = {
             ButtomCustom(
                 onClick = {
-                    viewModel.deletePassword(password)
+                    onConfirm()
                     onDismiss()
                 }
             ) {
@@ -48,7 +51,7 @@ fun DeleteDialog(
                 TextCustom(text = "Não", color = DarkGrey)
             }
         },
-        title = { TextCustom(text = stringResource(R.string.title)) },
+        title = { TextCustom(text = title) },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,7 +59,7 @@ fun DeleteDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextCustom(
-                    text = stringResource(id = R.string.delete_password),
+                    text = message,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -72,5 +75,5 @@ fun DeleteDialog(
 
 @Composable
 @Preview
-fun DeleteDialogPreview() {
+fun WarningDialogPreview() {
 }

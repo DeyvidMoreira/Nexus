@@ -13,11 +13,14 @@ object ConstantsMessages {
 
     const val MESSAGE_PASSWORD_NOT_SAVED = "Erro ao salvar a senha."
     const val MESSAGE_PASSWORD_DELETED = "Senha deletada com sucesso."
+    const val MESSAGE_ALL_PASSWORD_DELETED = "Senhas deletadas com sucesso."
 
     const val MESSAGE_REGISTER_FAILED = "Erro ao cadastrar usuário"
     const val MESSAGE_INVALID_EMAIL = "Email inválido"
     const val MESSAGE_INVALID_USER = "Usuário inválido"
     const val MESSAGE_EMPTY_FIELDS = "Preencha todos os campos"
+    const val MESSAGE_ACCOUNT_DELETED = "Conta deletada com sucesso."
+
 
 
 

@@ -26,5 +26,7 @@ interface PasswordDao {
     @Query("SELECT * FROM password_table WHERE tag LIKE '%' || :tag || '%'")
     fun getPasswordsByTag(tag: String): Flow<List<PasswordEntity>>
 
+    @Query("DELETE FROM password_table")
+    suspend fun deleteAllPasswords()
 
 }

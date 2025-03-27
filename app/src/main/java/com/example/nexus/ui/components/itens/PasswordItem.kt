@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -51,7 +52,7 @@ import com.example.nexus.framework.service.local.until.toFormattedDate
 import com.example.nexus.framework.service.local.until.toFormattedTime
 import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.components.buttons.TextButtonCustom
-import com.example.nexus.ui.components.dialogs.DeleteDialog
+import com.example.nexus.ui.components.dialogs.WarningDialog
 import com.example.nexus.ui.components.dialogs.EditPasswordDialog
 import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.theme.DarkGrey
@@ -144,14 +145,17 @@ fun PasswordItem(
 
     //Exibe o dialog
     if (showDeleteDialog) {
-        DeleteDialog(
+        WarningDialog(
+            title = stringResource(id = R.string.title_delete_password),
+            message = stringResource(id = R.string.message_delete_password),
             onDismiss = {
                 showDeleteDialog = false
                 swipeToDismissEnabled = true
             },
             backgroundColor = DarkGrey,
             viewModel = viewModel,
-            password = password
+            password = password,
+            onConfirm = onDelete
         )
     }
     if (showEditDialog) {

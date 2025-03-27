@@ -68,4 +68,13 @@
     <string name="txt_biometric">Login com Biometria</string>
 
 
+    <string name="title_delete_password">Deletar Senha</string>
+    <string name="message_delete_password">Tem certeza que deseja deletar esta senha?</string>
+
+    <string name="title_delete_account">Deletar Conta</string>
+    <string name="message_delete_account">Tem certeza que deseja deletar sua conta?</string>
+    <string name="title_delete_all_passwords">Deletar Todas Senhas</string>
+    <string name="message_delete_all_passwords">Tem certeza que deseja deletar todas as senhas?</string>
+
+
 </resources>

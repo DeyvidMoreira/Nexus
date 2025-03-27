@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,15 +48,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
+import com.example.nexus.framework.service.local.entity.PasswordEntity
+import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
+import com.example.nexus.ui.components.dialogs.LogoutDialog
+import com.example.nexus.ui.components.dialogs.WarningDialog
 import com.example.nexus.ui.components.texts.CustomMessageBox
 import com.example.nexus.ui.components.options.CustomSlider
 import com.example.nexus.ui.components.options.CustomSwitch
 import com.example.nexus.ui.components.drawer.Drawer
 import com.example.nexus.ui.components.itens.TopBar
+import com.example.nexus.ui.navigation.MainAppRoute
+import com.example.nexus.ui.navigation.routes.AuthNavigationGraph
 import com.example.nexus.ui.states.GeneratorState
+import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.DarkMediumGrey
 import com.example.nexus.ui.theme.MediumGrey
 import com.example.nexus.ui.theme.NeonGreen
@@ -67,6 +76,8 @@ import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.until.ClipboardHelper
 import com.example.nexus.ui.until.WarningMessage
 import com.example.pwdcripto.framework.contants.ConstantsCharacters
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun PasswordGeneratorScreen(
@@ -83,6 +94,12 @@ fun PasswordGeneratorScreen(
     bottomSheetChange: (Boolean) -> Unit = {}
 ) {
 
+    LaunchedEffect(uiState) {
+        uiState.isPasswordSaved = false
+        uiState.isPasswordDeleted = false
+        uiState.isAccountDeleted = false
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,49 +107,47 @@ fun PasswordGeneratorScreen(
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        Drawer(navController) { onOpenDrawer ->
-            Scaffold(
-                topBar = {
-                    MyTopBar()
-                }
+        Scaffold(
+            topBar = {
+                MyTopBar(navController, uiState)
+            }
 
-            ) { contentPadding ->
-                ColumnBackgroundColor(
-                    horizontal = Alignment.CenterHorizontally,
-                    vertical = Arrangement.Center
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxSize()
-                            .padding(contentPadding)
-                            .background(
-                                brush = Brush.sweepGradient(
-                                    listOf(
-                                        MediumGrey,
-                                        DarkMediumGrey,
-                                        MediumGrey
-                                    )
+        ) { contentPadding ->
+            ColumnBackgroundColor(
+                horizontal = Alignment.CenterHorizontally,
+                vertical = Arrangement.Center
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .background(
+                            brush = Brush.sweepGradient(
+                                listOf(
+                                    MediumGrey,
+                                    DarkMediumGrey,
+                                    MediumGrey
                                 )
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top,
-                    ) {
-                        SpacerCustom(paddingBottom = 8.dp)
-                        HeaderArea(uiState)
-                        SpacerCustom(paddingBottom = 16.dp)
-                        OptionsArea(
-                            uiState,
-                            upperChange,
-                            lowerChange,
-                            numChange,
-                            especialChange
-                        )
-                        SpacerCustom(paddingBottom = 32.dp)
-                        SliderArea(uiState, passwordLengthChange, sliderValueChange)
-                        SpacerCustom(paddingBottom = 32.dp)
-                        ButtonsArea(generatePassword, dialogChange, bottomSheetChange)
-                    }
+                            )
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top,
+                ) {
+                    SpacerCustom(paddingBottom = 8.dp)
+                    HeaderArea(uiState)
+                    SpacerCustom(paddingBottom = 16.dp)
+                    OptionsArea(
+                        uiState,
+                        upperChange,
+                        lowerChange,
+                        numChange,
+                        especialChange
+                    )
+                    SpacerCustom(paddingBottom = 32.dp)
+                    SliderArea(uiState, passwordLengthChange, sliderValueChange)
+                    SpacerCustom(paddingBottom = 32.dp)
+                    ButtonsArea(generatePassword, dialogChange, bottomSheetChange)
                 }
             }
         }
@@ -141,9 +156,59 @@ fun PasswordGeneratorScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopBar() {
+fun MyTopBar(navController: NavController, uiState: GeneratorState) {
 
     var expanded by remember { mutableStateOf(false) }
+    val showLogoutDialog = remember { mutableStateOf(false) }
+    val showDeleteAllPasswordsDialog = remember { mutableStateOf(false) }
+    val showDeleteAccountDialog = remember { mutableStateOf(false) }
+    val viewModel: PwdGeneratorViewModel = viewModel()
+
+    //Logout
+    if (showLogoutDialog.value) {
+        LogoutDialog(
+            onDismiss = { showLogoutDialog.value = false },
+            viewModel = viewModel(),
+            navController = navController
+        )
+    }
+
+    //Deletar Senhas
+    if (showDeleteAllPasswordsDialog.value) {
+        WarningDialog(
+            title = stringResource(R.string.title_delete_all_passwords),
+            message = stringResource(R.string.message_delete_all_passwords),
+            onConfirm = {
+                uiState.isPasswordDeleted = true
+                viewModel.deleteAllPasswords()
+            },
+            onDismiss = {
+                showDeleteAllPasswordsDialog.value = false
+                uiState.isPasswordDeleted = false
+            },
+            viewModel = viewModel(),
+            backgroundColor = DarkGrey,
+            password = PasswordEntity()
+        )
+    }
+
+    //Deletar Conta
+    if (showDeleteAccountDialog.value) {
+        WarningDialog(
+            title = stringResource(R.string.title_delete_account),
+            message = stringResource(R.string.message_delete_account),
+            onConfirm = {
+                viewModel.deleteAccount()
+                navController.navigate(AuthNavigationGraph.SIGN_IN) {
+                    popUpTo(MainAppRoute.MAIN) { inclusive = true }
+                }
+            },
+            onDismiss = { showDeleteAccountDialog.value = false },
+            viewModel = viewModel(),
+            backgroundColor = DarkGrey,
+            password = PasswordEntity()
+        )
+    }
 
     TopAppBar(
         title = { },
@@ -152,27 +217,45 @@ fun MyTopBar() {
                 Icon(Icons.Default.Settings, contentDescription = "Menu", tint = NeonGreen)
             }
             DropdownMenu(
+                modifier = Modifier
+                    .background(DarkMediumGrey),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                DropdownMenuItem(
-                    text = { TextCustom("Configurações") },
-                    onClick = {
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { TextCustom("Sobre") },
-                    onClick = {
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { TextCustom("Logout") },
-                    onClick = {
-                        expanded = false
-                    }
-                )
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(DarkMediumGrey)
+                ) {
+                    DropdownMenuItem(
+                        text = { TextCustom("Sobre") },
+                        onClick = {
+
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { TextCustom("Apagar Senhar") },
+                        onClick = {
+                            showDeleteAllPasswordsDialog.value = true
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { TextCustom("Deletar Conta") },
+                        onClick = {
+                            showDeleteAccountDialog.value = true
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { TextCustom("Logout") },
+                        onClick = {
+                            showLogoutDialog.value = true
+                            expanded = false
+                        }
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -194,10 +277,18 @@ fun HeaderArea(uiState: GeneratorState) {
         Box(
             contentAlignment = Alignment.TopCenter
         ) {
-            CustomMessageBox(
-                message = message,
-                isSuccess = uiState.isPasswordSaved || uiState.isPasswordCopied
-            )
+            if (uiState.isPasswordDeleted || uiState.isAccountDeleted || uiState.isPasswordSaved) {
+                CustomMessageBox(
+                    message = message,
+                    isSuccess = true
+                )
+            } else {
+                CustomMessageBox(
+                    message = message,
+                    isSuccess = false
+                )
+            }
+
         }
     }
 
@@ -437,5 +528,7 @@ private fun DashboardScreeenErrorPreview() {
 @Preview
 @Composable
 private fun MyTopBarPreview() {
-    MyTopBar()
+    val navController = rememberNavController()
+    val uiState = GeneratorState(warningMessage = "Erro ao carregar dados")
+    MyTopBar(navController, uiState)
 }
