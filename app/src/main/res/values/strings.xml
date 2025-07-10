@@ -76,5 +76,9 @@
     <string name="title_delete_all_passwords">Deletar Todas Senhas</string>
     <string name="message_delete_all_passwords">Tem certeza que deseja deletar todas as senhas?</string>
 
+    <string name="about_title">Sobre</string>
+    <string name="about_user_name">Usuário</string>
+    <string name="about_user_email">E-mail</string>
+    <string name="about_user_password">Senha</string>
 
 </resources>

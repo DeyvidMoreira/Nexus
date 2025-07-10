@@ -29,8 +29,8 @@ fun ColumnBackgroundColor(
                         MediumGrey
                     )
                 )
-            ),
-        horizontalAlignment = horizontal,
+            ),        horizontalAlignment = horizontal,
+
         verticalArrangement = vertical
     ) {
         content()

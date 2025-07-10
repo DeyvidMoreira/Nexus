@@ -106,7 +106,9 @@ fun PasswordItem(
                 ) {
                     TextCustom(text = "Não")
                 }
-            }
+            },
+            backgroundColor = DarkGrey,
+            shape = RoundedCornerShape(30.dp, 0.dp, 30.dp, 0.dp)
 
         )
     }

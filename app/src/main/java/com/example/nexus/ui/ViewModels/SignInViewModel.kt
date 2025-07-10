@@ -212,9 +212,10 @@ class SignInViewModel(
     }
 
     private fun onLoginSuccess() {
-        // Lógica pós-sucesso de login
         Log.d("SignIn", "Login bem-sucedido!")
-        // Você pode querer navegar para a tela principal aqui, por exemplo:
-        // _uiState.update { currentState -> currentState.copy(isLoggedIn = true) }
+        WarningMessage.setMessage("Login bem-sucedido!")
+        viewModelScope.launch {
+            _signInIsSuccessful.emit(true)
+        }
     }
 }

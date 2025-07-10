@@ -1,6 +1,7 @@
 package com.example.nexus.ui.theme.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,6 +28,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
 import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.ui.ViewModels.ForgotPasswordViewModel
+import com.example.nexus.ui.components.texts.CustomMessageBox
+import com.example.nexus.ui.states.ResetPasswordState
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.NeonGreen
@@ -34,19 +40,47 @@ import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
+import com.example.nexus.ui.until.WarningMessage
+import org.koin.androidx.compose.getViewModel
 
 
 @Composable
-fun ForgotPasswordScreen(navController: NavController) {
+fun ForgotPasswordScreen(
+    navController: NavController,
+    viewModel: ForgotPasswordViewModel = getViewModel()
+) {
+    val state by viewModel.resetState.collectAsState()
+    val warningMessage by WarningMessage.message.collectAsState()
 
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            kotlinx.coroutines.delay(2000) // dá tempo para ler a mensagem
+            navController.popBackStack()
+            viewModel.clearState()
+        }
+    }
 
     ColumnBackgroundColor(
         horizontal = Alignment.CenterHorizontally,
         vertical = Arrangement.Center
     ) {
-        TitleForgotPassword()
+        warningMessage?.let { message ->
+            Box(contentAlignment = Alignment.TopCenter) {
+                CustomMessageBox(
+                    message = message,
+                    isSuccess = state.isSuccess
+                )
+            }
+        }
+
+        if (warningMessage == null) {
+            TitleForgotPassword()
+        } else {
+            TextCustom(text = "") // espaço vazio quando exibe alerta
+        }
+
         SpacerCustom(paddingBottom = 50.dp)
-        CardForgotPassword()
+        CardForgotPassword(viewModel)
     }
 }
 
@@ -60,10 +94,11 @@ fun TitleForgotPassword() {
 }
 
 @Composable
-fun CardForgotPassword() {
+fun CardForgotPassword(
+    viewModel: ForgotPasswordViewModel = getViewModel()
+) {
     var userEmail by rememberSaveable { mutableStateOf("") }
 
-    // Cartão com borda animada contendo o formulário de solicitação
     AnimatedBorderCard(
         modifier = Modifier
             .width(300.dp)
@@ -73,13 +108,11 @@ fun CardForgotPassword() {
         borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
         animationDuration = 5000
     ) {
-        // Conteúdo do formulário
         Column(
             modifier = Modifier.padding(all = 24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Mensagem de instrução
             TextCustom(
                 text = stringResource(id = R.string.txt_message_send_email),
                 fontSize = 18.sp
@@ -87,7 +120,6 @@ fun CardForgotPassword() {
 
             SpacerCustom(paddingBottom = 30.dp)
 
-            // Campo de entrada para o email
             TextFieldCustom(
                 value = userEmail,
                 onValueChange = { userEmail = it },
@@ -100,15 +132,9 @@ fun CardForgotPassword() {
 
             SpacerCustom(paddingBottom = 30.dp)
 
-            // Botão para enviar o link de redefinição
             ButtomCustom(
                 onClick = {
-                    val error = InputValidation.validateEmail(userEmail)
-                    if (error == null) {
-                        // Lógica para enviar o email de redefinição
-                    } else {
-                        // Exibir mensagem de erro
-                    }
+                    viewModel.onSendResetPasswordClick(userEmail)
                 }
             ) {
                 Text(
@@ -119,6 +145,7 @@ fun CardForgotPassword() {
         }
     }
 }
+
 
 @Preview
 @Composable
