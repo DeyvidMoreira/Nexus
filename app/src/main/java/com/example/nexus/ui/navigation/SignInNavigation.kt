@@ -21,28 +21,32 @@ fun NavGraphBuilder.signInNavigation(
     onNavigationToHome: () -> Unit,
     onNavigationToForgotPassword: () -> Unit
 ) {
-
     composable(AuthNavigationGraph.SIGN_IN) {
         val viewModel = koinViewModel<SignInViewModel>()
         val uiState by viewModel.uiState.collectAsState()
-
         val scope = rememberCoroutineScope()
-        val singInIsSuccessful by viewModel.signInIsSuccessful.collectAsState(false)
 
-        LaunchedEffect(singInIsSuccessful) {
-            if (singInIsSuccessful) {
-                onNavigationToHome()
+        // dispara navegação ao sucesso
+        val signedIn by viewModel.signInIsSuccessful.collectAsState(initial = false)
+        if (signedIn) onNavigationToHome()
+
+        LaunchedEffect (viewModel){
+            viewModel.signInIsSuccessful.collect{ success ->
+                if(success) {
+                    onNavigationToHome()
+                    viewModel.resetLoginState() //Reseta após navegar
+                }
+
             }
         }
+
         SignInScreen(
             uiState = uiState,
-            onEnterClick = {
-                scope.launch {
-                    viewModel.signIn()
-                }
-            },
-            onNavigationToSignUp = onNavigationToSignUp,
+            onEnterClick = { user -> scope.launch { viewModel.signIn(user) } },
+            onBiometricSuccess = { scope.launch { viewModel.signInWithSavedCredentials() } },
+            onBiometricError = { msg -> scope.launch { viewModel.emitWarning(msg) } },
             onNavigationToForgotPassword = onNavigationToForgotPassword,
+            onNavigationToSignUp = onNavigationToSignUp
         )
     }
 }

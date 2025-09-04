@@ -1,7 +1,6 @@
 package com.example.nexus.ui.navigation.routes
 
 
-
 object AuthNavigationGraph {
     const val SIGN_IN = "SignInScreen"
     const val SIGN_UP = "SignUpScreen"

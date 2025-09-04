@@ -22,6 +22,7 @@ import com.example.nexus.ui.theme.components.TextCustom
 fun IconTextButton(
     text: String,
     icon: ImageVector,
+    fontSize: Int = 14,
     onClick: () -> Unit
 ) {
 
@@ -40,7 +41,7 @@ fun IconTextButton(
             contentDescription = null,
             modifier = Modifier.size(50.dp)
         )
-        TextCustom(text = text, fontSize = 22.sp)
+        TextCustom(text = text, fontSize = fontSize.sp)
 
 
     }

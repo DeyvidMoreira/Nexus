@@ -1,6 +1,5 @@
 package com.example.pwdcripto.framework.contants
 
-import com.example.nexus.ui.until.WarningMessage
 
 object ConstantsMessages {
 

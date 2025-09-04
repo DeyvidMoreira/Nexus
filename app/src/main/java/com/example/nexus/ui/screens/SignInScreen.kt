@@ -1,5 +1,7 @@
 package com.example.nexus.ui.theme.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,23 +48,26 @@ import com.example.nexus.ui.theme.components.ColumnBackgroundColor
 import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
+import com.example.nexus.ui.util.BiometricAuth
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun SignInScreen(
     uiState: SignInState,
     onEnterClick: (UserModel) -> Unit,
+    onBiometricSuccess: () -> Unit,
+    onBiometricError: (String) -> Unit,
     onNavigationToForgotPassword: () -> Unit = {},
-    onNavigationToSignUp: () -> Unit = {},
-
-    ) {
-    val warningMessage by rememberSaveable { mutableStateOf<String?>(null) }
-    val currentWarningMessage = warningMessage ?: uiState.warningMessage
+    onNavigationToSignUp: () -> Unit = {}
+) {
+    var localWarning by rememberSaveable { mutableStateOf<String?>(null) }
+    val warningMessage = localWarning ?: uiState.warningMessage
 
     ColumnBackgroundColor(
         horizontal = Alignment.CenterHorizontally,
         vertical = Arrangement.Center
     ) {
-        currentWarningMessage?.let { message ->
+        warningMessage?.let { message ->
             Box(contentAlignment = Alignment.TopCenter) {
                 CustomMessageBox(
                     message = message,
@@ -74,28 +79,28 @@ fun SignInScreen(
         AnimatedBorderCard(
             modifier = Modifier
                 .width(300.dp)
-                .padding(all = 2.dp)
-                .height(500.dp),
+                .padding(2.dp)
+                .height(520.dp),
             shape = RoundedCornerShape(50.dp, 0.dp, 50.dp, 0.dp),
             borderGradient = Brush.sweepGradient(listOf(LightGreen, NeonGreen)),
             animationDuration = 5000
         ) {
             Column(
-                modifier = Modifier.padding(all = 24.dp),
+                modifier = Modifier.padding(18.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Credentials(uiState)
                 CheckElements(uiState)
-                SpacerCustom(paddingBottom = 16.dp)
                 AccountArea(
-                    uiState,
-                    onEnterClick,
-                    onNavigationToForgotPassword,
-                    onNavigationToSignUp
+                    uiState = uiState,
+                    onEnterClick = onEnterClick,
+                    onBiometricSuccess = onBiometricSuccess,
+                    onBiometricError = onBiometricError,
+                    onNavigationToForgotPassword = onNavigationToForgotPassword,
+                    onNavigationToSignUp = onNavigationToSignUp
                 )
             }
-
         }
     }
 }
@@ -128,20 +133,20 @@ fun Credentials(uiState: SignInState) {
     ) {
         TextFieldCustom(
             value = uiState.email,
-            onValueChange = { newEmail -> uiState.onEmailChange(newEmail) },
+            onValueChange = { uiState.onEmailChange(it) },
             hint = stringResource(id = R.string.hint_user_email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         SpacerCustom(paddingBottom = 20.dp)
         TextFieldCustom(
             value = uiState.password,
-            onValueChange = { newPassword -> uiState.onPasswordChange(newPassword) },
+            onValueChange = { uiState.onPasswordChange(it) },
             hint = stringResource(id = R.string.hint_password),
             icon = R.drawable.ic_pwd,
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             showTrailingIcon = true,
             onTrailingIconClick = { passwordVisibility = !passwordVisibility },
-            trailingIcon = if (passwordVisibility) R.drawable.icon_visibility else R.drawable.icon_visibility_off,
+            trailingIcon = if (passwordVisibility) R.drawable.icon_visibility else R.drawable.icon_visibility_off
         )
     }
 }
@@ -164,10 +169,7 @@ fun CheckElements(uiState: SignInState) {
                 onCheckedChange = { uiState.onRememberMeClick() }
             )
             TextButtonCustom(onClick = { uiState.onRememberMeClick() }) {
-                TextCustom(
-                    text = stringResource(id = R.string.txt_remember_me),
-                    fontSize = 14.sp
-                )
+                TextCustom(text = stringResource(id = R.string.txt_remember_me), fontSize = 14.sp)
             }
         }
         Row(
@@ -176,41 +178,39 @@ fun CheckElements(uiState: SignInState) {
         ) {
             CustomSwitch(
                 checked = uiState.isBiometricCheck,
-                onCheckedChange = {  uiState.onBiometricClick() }
+                onCheckedChange = { uiState.onBiometricClick() }
             )
             SpacerCustom(paddingEnd = 16.dp)
-            TextCustom(
-                text = stringResource(id = R.string.switch_biometric),
-                fontSize = 16.sp
-            )
+            TextCustom(text = stringResource(id = R.string.switch_biometric), fontSize = 16.sp)
         }
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun AccountArea(
     uiState: SignInState,
     onEnterClick: (UserModel) -> Unit,
+    onBiometricSuccess: () -> Unit,
+    onBiometricError: (String) -> Unit,
     onNavigationToForgotPassword: () -> Unit = {},
     onNavigationToSignUp: () -> Unit = {}
 ) {
-    ButtomCustom(
-        onClick = { onEnterClick(UserModel(uiState.email, uiState.password)) }
-    ) {
+    ButtomCustom(onClick = { onEnterClick(UserModel(uiState.email, uiState.password)) }) {
         Text(text = stringResource(id = R.string.btn_sing_in), color = DarkGrey)
     }
     SpacerCustom(paddingBottom = 16.dp)
+    BiometricAuth(
+        onSuccess = onBiometricSuccess,
+        onError = onBiometricError
+    )
+    SpacerCustom(paddingBottom = 16.dp)
     TextButtonCustom(onClick = onNavigationToForgotPassword) {
-        TextCustom(
-            text = stringResource(id = R.string.btn_forgot_password),
-            fontSize = 14.sp
-        )
+        TextCustom(text = stringResource(id = R.string.btn_forgot_password), fontSize = 14.sp)
     }
     TextButtonCustom(onClick = onNavigationToSignUp) {
-        TextCustom(
-            text = stringResource(id = R.string.btn_register),
-            fontSize = 14.sp
-        )
+        TextCustom(text = stringResource(id = R.string.btn_register), fontSize = 14.sp)
     }
 }
 
@@ -221,16 +221,32 @@ private fun ComponentsPreview() {
     CheckElements(uiState)
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 @Preview
 private fun SignInScreenPreview() {
     val uiState = SignInState()
-    SignInScreen(onEnterClick = {}, uiState = uiState)
+    SignInScreen(
+        uiState = uiState,
+        onEnterClick = {},
+        onBiometricSuccess = {},
+        onBiometricError = {},
+        onNavigationToForgotPassword = {},
+        onNavigationToSignUp = {}
+    )
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 @Preview("With Error")
 private fun ErrorPreview() {
     val uiState = SignInState(warningMessage = "Erro ao carregar dados")
-    SignInScreen(uiState, onEnterClick = {})
+    SignInScreen(
+        uiState = uiState,
+        onEnterClick = {},
+        onBiometricSuccess = {},
+        onBiometricError = {},
+        onNavigationToForgotPassword = {},
+        onNavigationToSignUp = {}
+    )
 }

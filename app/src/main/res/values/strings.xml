@@ -64,6 +64,7 @@
     <string name="hint_surname">Digite seu sobrenome:</string>
     <!-- Buttons -->
     <string name="btn_register">Registrar-se</string>
+    <string name="btn_sing_in_biometric">Login com Biometria</string>
     <string name="btn_new_account">Criar conta</string>
     <string name="txt_biometric">Login com Biometria</string>
 
