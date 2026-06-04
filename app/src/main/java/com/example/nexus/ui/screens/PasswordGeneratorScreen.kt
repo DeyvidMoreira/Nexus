@@ -74,7 +74,7 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.until.ClipboardHelper
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsCharacters
+import com.example.nexus.framework.common.constants.ConstantsCharacters
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 

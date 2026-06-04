@@ -1,6 +1,6 @@
 package com.example.nexus.ui.ViewModels
 
-import com.example.nexus.core.service.repository.local.ValidationError
+import com.example.nexus.framework.common.validation.ValidationError
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.testing.MainDispatcherRule
 import com.example.nexus.ui.until.WarningMessage

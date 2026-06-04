@@ -2,7 +2,7 @@ package com.example.nexus.framework.service.local.until
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.pwdcripto.framework.contants.ConstantsDatabase
+import com.example.nexus.framework.common.constants.ConstantsDatabase
 
 fun getDatabaseMigrations(): Array<Migration> {
     return ConstantsDatabase.migrations.map { (targetVersion, strategy) ->

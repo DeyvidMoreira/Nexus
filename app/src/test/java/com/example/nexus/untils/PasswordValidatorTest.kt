@@ -1,7 +1,7 @@
 package com.example.nexus.untils
 
 import com.example.nexus.ui.until.PasswordValidator
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Test

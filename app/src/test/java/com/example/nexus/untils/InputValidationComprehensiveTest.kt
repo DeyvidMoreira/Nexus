@@ -1,7 +1,7 @@
 package com.example.nexus.untils
 
-import com.example.nexus.core.service.repository.local.ValidationError
-import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.framework.common.validation.ValidationError
+import com.example.nexus.framework.common.validation.InputValidation
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

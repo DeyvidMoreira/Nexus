@@ -58,14 +58,24 @@ Cuidados atuais:
 - Senhas salvas sao criptografadas antes de irem para o banco local.
 - Credenciais do recurso "lembrar-me" ficam em `EncryptedSharedPreferences`.
 - Backup automatico da aplicacao esta desabilitado no manifesto.
+- Regras de backup e device transfer excluem bancos, shared preferences e arquivos locais.
+- Trafego HTTP sem TLS fica desabilitado por manifesto.
+- Capturas de tela ficam bloqueadas via `FLAG_SECURE`.
+- A exclusao de conta tambem limpa as senhas locais.
 - Logs diretos de credenciais foram removidos.
+- `app/google-services.json` nao deve ser versionado; use arquivo local ou o secret `GOOGLE_SERVICES_JSON` no CI.
 
 Pontos que ainda merecem evolucao antes de producao:
 
-- Aumentar cobertura de testes para criptografia, repository e ViewModels.
-- Revisar nomes de packages/pastas herdados de refatoracoes anteriores.
+- Validar Android Keystore e biometria em testes instrumentados.
 - Definir politica de rotacao/recuperacao para dados locais protegidos por Keystore.
-- Criar pipeline de CI para build e testes.
+- Expandir testes instrumentados/Compose para validar UI em dispositivo ou emulador.
+
+## CI
+
+O workflow `.github/workflows/android-ci.yml` executa `./gradlew testDebugUnitTest` em pull requests e pushes para `master`.
+
+Para builds que precisem do Firebase configurado, cadastre o conteudo do `google-services.json` no secret `GOOGLE_SERVICES_JSON`.
 
 ## Testes
 
@@ -85,6 +95,7 @@ Cobertura atual da suite unitaria:
 - fluxo de recuperacao de senha;
 - repository local de senhas, incluindo criptografia na gravacao e leitura de dados atuais/legados;
 - repository remoto de autenticacao Firebase com sucesso e principais erros mapeados;
+- configuracoes de seguranca de manifesto e backup;
 - mensagens globais de aviso.
 
 Os testes instrumentados ficam em:

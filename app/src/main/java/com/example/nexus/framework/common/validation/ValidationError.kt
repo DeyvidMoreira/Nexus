@@ -1,4 +1,4 @@
-package com.example.nexus.core.service.repository.local
+package com.example.nexus.framework.common.validation
 
 
 enum class ValidationError {

@@ -7,8 +7,8 @@ import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.testing.MainDispatcherRule
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsCharacters
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsCharacters
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coVerify
 import io.mockk.every
@@ -150,5 +150,14 @@ class PwdGeneratorViewModelTest {
         val password = PasswordEntity(tag = "Email", password = "plain-password")
 
         assertThat(viewModel.getDecryptedPassword(password)).isEqualTo("plain-password")
+    }
+
+    @Test
+    fun `deleteAccount removes remote account and clears local passwords`() {
+        viewModel.deleteAccount()
+
+        coVerify(timeout = 1_000) { firebaseAuthRepository.deleteAccount() }
+        coVerify(timeout = 1_000) { passwordRepository.deleteAllPasswords() }
+        coVerify(timeout = 1_000) { firebaseAuthRepository.logout() }
     }
 }

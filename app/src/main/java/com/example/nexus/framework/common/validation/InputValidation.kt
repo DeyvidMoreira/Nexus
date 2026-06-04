@@ -1,6 +1,4 @@
-package com.example.nexus.core.service.repository.local.validationFields
-
-import com.example.nexus.core.service.repository.local.ValidationError
+package com.example.nexus.framework.common.validation
 
 object InputValidation {
     private val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)\$".toRegex()

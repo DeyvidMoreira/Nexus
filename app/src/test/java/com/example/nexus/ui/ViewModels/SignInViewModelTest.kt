@@ -6,7 +6,7 @@ import com.example.nexus.testing.MainDispatcherRule
 import com.example.nexus.testing.eventually
 import com.example.nexus.ui.until.UserPreferences
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

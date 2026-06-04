@@ -10,8 +10,8 @@ import com.example.nexus.framework.service.remote.repository.FirebaseAuthReposit
 import com.example.nexus.ui.states.GeneratorState
 import com.example.nexus.ui.until.PasswordValidator
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsCharacters
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsCharacters
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -169,6 +169,7 @@ class PwdGeneratorViewModel(
         viewModelScope.launch {
             try {
                 firebaseAuthRepository.deleteAccount()
+                passwordRepository.deleteAllPasswords()
                 firebaseAuthRepository.logout()
                 WarningMessage.setMessage(
                     ConstantsMessages.MESSAGE_ACCOUNT_DELETED

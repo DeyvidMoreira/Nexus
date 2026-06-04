@@ -13,7 +13,7 @@ import com.example.nexus.ui.ViewModels.SignInViewModel
 import com.example.nexus.ui.ViewModels.SignUpViewModel
 import com.example.nexus.ui.until.CryptoHelper
 import com.example.nexus.ui.until.UserPreferences
-import com.example.pwdcripto.framework.contants.ConstantsDatabase
+import com.example.nexus.framework.common.constants.ConstantsDatabase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.koin.android.ext.koin.androidContext
