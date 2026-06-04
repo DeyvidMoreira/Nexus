@@ -1,7 +1,5 @@
 package com.example.nexus.ui.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,7 +13,6 @@ import com.example.nexus.ui.theme.screens.SignInScreen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@RequiresApi(Build.VERSION_CODES.R)
 fun NavGraphBuilder.signInNavigation(
     onNavigationToSignUp: () -> Unit,
     onNavigationToHome: () -> Unit,

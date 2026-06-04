@@ -21,7 +21,7 @@ fun TextButtonCustom(onClick: () -> Unit, content: @Composable () -> Unit){
 @Preview
 @Composable
 private fun TextCustomPreview(){
-    TextButtonCustom(onClick = {println("Texto clicado")}){
+    TextButtonCustom(onClick = {}){
         Text(text = "Click-me")
     }
 }

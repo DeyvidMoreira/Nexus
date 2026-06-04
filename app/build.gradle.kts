@@ -66,7 +66,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
-    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,8 +78,6 @@ dependencies {
     implementation (libs.androidx.navigation.compose)
     //noinspection UseTomlInstead
     implementation("androidx.compose.material:material:1.7.7")
-
-    implementation(platform(libs.androidx.compose.bom.v20250101))
 
     debugImplementation(libs.ui.tooling)
     implementation(libs.ui.tooling.preview)
@@ -98,7 +95,6 @@ dependencies {
     implementation (libs.firebase.auth)
     implementation (libs.firebase.firestore)
     implementation(libs.firebase.analytics)
-    implementation(libs.google.firebase.auth)
 
     //Google Icon Packs
     implementation(libs.androidx.material.icons.extended)
@@ -112,17 +108,11 @@ dependencies {
     // Koin para testes
     testImplementation (libs.koin.test)
 
-    //Material Icons
-    implementation(libs.material.icons.extended)
-
     //Data Store
     implementation (libs.androidx.datastore.preferences)
 
     //Google Crypto
     implementation (libs.androidx.security.crypto)
-
-    // JUnit para testes unitários
-    testImplementation(libs.junit)
 
     // Kotlinx Coroutines Test para testar corrotinas e fluxos
     testImplementation(libs.kotlinx.coroutines.test)
