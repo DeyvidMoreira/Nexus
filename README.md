@@ -75,10 +75,22 @@ Os testes unitarios ficam em:
 app/src/test
 ```
 
+Cobertura atual da suite unitaria:
+
+- validacao de campos de cadastro e senha;
+- validacao de salvamento de senha gerada;
+- geracao de senhas e regras do `PwdGeneratorViewModel`;
+- fluxo de login, remember-me e credenciais salvas;
+- fluxo de cadastro;
+- fluxo de recuperacao de senha;
+- repository local de senhas, incluindo criptografia na gravacao e leitura de dados atuais/legados;
+- repository remoto de autenticacao Firebase com sucesso e principais erros mapeados;
+- mensagens globais de aviso.
+
 Os testes instrumentados ficam em:
 
 ```text
 app/src/androidTest
 ```
 
-Atualmente a cobertura ainda e pequena e deve ser ampliada principalmente nas camadas de seguranca e persistencia.
+Ainda faltam testes instrumentados/Compose para validar a interface em dispositivo ou emulador.

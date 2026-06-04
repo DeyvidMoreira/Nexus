@@ -88,6 +88,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation (libs.kotlinx.coroutines.core)
     implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.kotlinx.coroutines.play.services)
 
     // Import the Firebase BoM
     //noinspection UseTomlInstead
