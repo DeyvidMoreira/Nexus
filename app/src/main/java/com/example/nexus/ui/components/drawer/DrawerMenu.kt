@@ -27,9 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.nexus.R
+import com.example.nexus.ui.ViewModels.PwdGeneratorViewModel
 import com.example.nexus.ui.components.buttons.IconTextButton
 import com.example.nexus.ui.components.dialogs.LogoutDialog
 import com.example.nexus.ui.theme.DarkMediumGrey
@@ -42,12 +42,18 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 
 @Composable
-fun DrawerMenuContent(navController: NavController) {
-    AccountMenuContent(navController)
+fun DrawerMenuContent(
+    navController: NavController,
+    viewModel: PwdGeneratorViewModel? = null
+) {
+    AccountMenuContent(navController, viewModel)
 }
 
 @Composable
-fun AccountMenuContent(navController: NavController) {
+fun AccountMenuContent(
+    navController: NavController,
+    viewModel: PwdGeneratorViewModel? = null
+) {
     val showDialog = remember { mutableStateOf(false) }
 
     Surface(
@@ -88,10 +94,10 @@ fun AccountMenuContent(navController: NavController) {
             }
         }
 
-        if (showDialog.value) {
+        if (showDialog.value && viewModel != null) {
             LogoutDialog(
                 onDismiss = { showDialog.value = false },
-                viewModel = viewModel(),
+                viewModel = viewModel,
                 navController = navController
             )
         }

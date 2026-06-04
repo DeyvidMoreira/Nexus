@@ -8,11 +8,10 @@ import com.example.nexus.framework.service.local.entity.PasswordEntity
 import com.example.nexus.framework.service.local.repository.PasswordRepository
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.GeneratorState
-import com.example.nexus.ui.until.CryptoHelper
 import com.example.nexus.ui.until.PasswordValidator
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsCharacters
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsCharacters
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +23,7 @@ import kotlinx.coroutines.launch
 
 class PwdGeneratorViewModel(
     private val passwordRepository: PasswordRepository,
-    private val firebaseAuthRepository: FirebaseAuthRepository,
-    private val cryptoHelper: CryptoHelper
+    private val firebaseAuthRepository: FirebaseAuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(GeneratorState())
     val state: StateFlow<GeneratorState> = _state.asStateFlow()
@@ -103,28 +101,18 @@ class PwdGeneratorViewModel(
 
     //Salvar senha usando AES
     fun savePassword(tag: String, password: String) {
-        val error = PasswordValidator.validate(tag, _state.value.generatedPassword ?: "")
-        val generatedPassword = _state.value.generatedPassword
-        if (generatedPassword.isNullOrEmpty()) {
-            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_GENERATE_PASSWORD)
+        val error = PasswordValidator.validate(tag, password)
+        if (error != null) {
+            WarningMessage.setMessage(error)
             return
         }
-        if (tag.isEmpty()) {
-            WarningMessage.setMessage(ConstantsMessages.MESSAGE_NO_TAG)
-            return
-        }
-        //Gera a chave secreta
-        val secretKey = cryptoHelper.getOrCreateSecretKey()
-
-        //Criptografa a senha antes de salvar
-        val encryptedPassword = cryptoHelper.encryptLocalData(password, secretKey)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 passwordRepository.savePassword(
                     PasswordEntity(
                         tag = tag,
-                        password = encryptedPassword
+                        password = password
                     )
                 )
                 WarningMessage.setMessage(ConstantsMessages.MESSAGE_PASSWORD_SAVED)
@@ -162,13 +150,7 @@ class PwdGeneratorViewModel(
 
     //Função para Exibir a senha descriptografada
     fun getDecryptedPassword(passwordEntity: PasswordEntity): String {
-        return try {
-            val secretKey = cryptoHelper.getOrCreateSecretKey()
-            cryptoHelper.decryptLocalData(passwordEntity.password, secretKey)
-        } catch (e: Exception) {
-            Log.e("DEBUG", "Falha ao descriptografar: ${e.message}", e)
-            "ERRO"
-        }
+        return passwordEntity.password
     }
 
     // Função para deletar todas as senhas
@@ -187,6 +169,7 @@ class PwdGeneratorViewModel(
         viewModelScope.launch {
             try {
                 firebaseAuthRepository.deleteAccount()
+                passwordRepository.deleteAllPasswords()
                 firebaseAuthRepository.logout()
                 WarningMessage.setMessage(
                     ConstantsMessages.MESSAGE_ACCOUNT_DELETED

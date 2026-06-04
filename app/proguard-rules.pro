@@ -12,11 +12,12 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve useful metadata for reflection-based libraries and crash analysis.
+-keepattributes Signature,*Annotation*,InnerClasses,EnclosingMethod,SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-@local.properties
+
+# Room entities are persisted data contracts.
+-keep class com.example.nexus.framework.service.local.entity.** { *; }

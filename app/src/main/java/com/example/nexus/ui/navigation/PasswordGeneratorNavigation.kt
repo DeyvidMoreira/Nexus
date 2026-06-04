@@ -34,6 +34,7 @@ fun NavGraphBuilder.passwordGeneratorNavigation(
         PasswordGeneratorScreen(
             uiState = uiState,
             navController = navController,
+            viewModel = viewModel,
             upperChange = { isChecked -> viewModel.updateOption("upper", isChecked) },
             lowerChange = { isChecked -> viewModel.updateOption("lower", isChecked) },
             numChange = { isChecked -> viewModel.updateOption("number", isChecked) },

@@ -1,4 +1,4 @@
-package com.example.pwdcripto.framework.contants
+package com.example.nexus.framework.common.constants
 
 
 object ConstantsMessages {

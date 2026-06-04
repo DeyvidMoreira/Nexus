@@ -1,7 +1,5 @@
 package com.example.nexus.ui.theme.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,7 +48,6 @@ import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.theme.components.TextFieldCustom
 import com.example.nexus.ui.util.BiometricAuth
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun SignInScreen(
     uiState: SignInState,
@@ -187,7 +184,6 @@ fun CheckElements(uiState: SignInState) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun AccountArea(
     uiState: SignInState,
@@ -221,7 +217,6 @@ private fun ComponentsPreview() {
     CheckElements(uiState)
 }
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 @Preview
 private fun SignInScreenPreview() {
@@ -236,7 +231,6 @@ private fun SignInScreenPreview() {
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 @Preview("With Error")
 private fun ErrorPreview() {

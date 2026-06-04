@@ -3,12 +3,12 @@ package com.example.nexus.ui.ViewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nexus.core.service.repository.local.ValidationError
-import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.framework.common.validation.ValidationError
+import com.example.nexus.framework.common.validation.InputValidation
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.SignUpUiState
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

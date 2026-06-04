@@ -1,0 +1,38 @@
+name: Android CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  verification:
+    name: Verification
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Restore Firebase config
+        if: ${{ env.GOOGLE_SERVICES_JSON != '' }}
+        run: |
+          printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+
+      - name: Run verification
+        run: ./gradlew testDebugUnitTest lintDebug assembleDebug

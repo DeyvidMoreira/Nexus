@@ -1,6 +1,6 @@
 package com.example.nexus.ui.until
 
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsMessages
 
 object  PasswordValidator {
     fun validate(tag: String, password: String) : String?{

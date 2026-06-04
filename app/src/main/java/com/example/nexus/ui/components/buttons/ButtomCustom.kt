@@ -37,7 +37,7 @@ fun ButtomCustom(
 @Preview
 @Composable
 private fun PreviewButtomCustom() {
-    ButtomCustom(onClick = { println("Botão clicado") }) {
+    ButtomCustom(onClick = {}) {
         Text(text = "Botão ")
     }
 }

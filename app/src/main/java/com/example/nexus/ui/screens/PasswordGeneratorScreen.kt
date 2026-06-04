@@ -48,7 +48,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
@@ -75,7 +74,7 @@ import com.example.nexus.ui.theme.components.SpacerCustom
 import com.example.nexus.ui.theme.components.TextCustom
 import com.example.nexus.ui.until.ClipboardHelper
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsCharacters
+import com.example.nexus.framework.common.constants.ConstantsCharacters
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -83,6 +82,7 @@ import kotlin.time.Duration.Companion.seconds
 fun PasswordGeneratorScreen(
     uiState: GeneratorState,
     navController: NavController,
+    viewModel: PwdGeneratorViewModel? = null,
     upperChange: (Boolean) -> Unit = {},
     lowerChange: (Boolean) -> Unit = {},
     numChange: (Boolean) -> Unit = {},
@@ -109,7 +109,7 @@ fun PasswordGeneratorScreen(
     ) {
         Scaffold(
             topBar = {
-                MyTopBar(navController, uiState)
+                MyTopBar(navController, uiState, viewModel)
             }
 
         ) { contentPadding ->
@@ -156,25 +156,28 @@ fun PasswordGeneratorScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopBar(navController: NavController, uiState: GeneratorState) {
+fun MyTopBar(
+    navController: NavController,
+    uiState: GeneratorState,
+    viewModel: PwdGeneratorViewModel? = null
+) {
 
     var expanded by remember { mutableStateOf(false) }
     val showLogoutDialog = remember { mutableStateOf(false) }
     val showDeleteAllPasswordsDialog = remember { mutableStateOf(false) }
     val showDeleteAccountDialog = remember { mutableStateOf(false) }
-    val viewModel: PwdGeneratorViewModel = viewModel()
 
     //Logout
-    if (showLogoutDialog.value) {
+    if (showLogoutDialog.value && viewModel != null) {
         LogoutDialog(
             onDismiss = { showLogoutDialog.value = false },
-            viewModel = viewModel(),
+            viewModel = viewModel,
             navController = navController
         )
     }
 
     //Deletar Senhas
-    if (showDeleteAllPasswordsDialog.value) {
+    if (showDeleteAllPasswordsDialog.value && viewModel != null) {
         WarningDialog(
             title = stringResource(R.string.title_delete_all_passwords),
             message = stringResource(R.string.message_delete_all_passwords),
@@ -186,14 +189,14 @@ fun MyTopBar(navController: NavController, uiState: GeneratorState) {
                 showDeleteAllPasswordsDialog.value = false
                 uiState.isPasswordDeleted = false
             },
-            viewModel = viewModel(),
+            viewModel = viewModel,
             backgroundColor = DarkGrey,
             password = PasswordEntity()
         )
     }
 
     //Deletar Conta
-    if (showDeleteAccountDialog.value) {
+    if (showDeleteAccountDialog.value && viewModel != null) {
         WarningDialog(
             title = stringResource(R.string.title_delete_account),
             message = stringResource(R.string.message_delete_account),
@@ -204,7 +207,7 @@ fun MyTopBar(navController: NavController, uiState: GeneratorState) {
                 }
             },
             onDismiss = { showDeleteAccountDialog.value = false },
-            viewModel = viewModel(),
+            viewModel = viewModel,
             backgroundColor = DarkGrey,
             password = PasswordEntity()
         )
