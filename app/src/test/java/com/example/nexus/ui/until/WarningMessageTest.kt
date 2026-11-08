@@ -3,6 +3,7 @@ package com.example.nexus.ui.until
 import com.example.nexus.testing.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -14,7 +15,7 @@ import org.junit.Test
 class WarningMessageTest {
 
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+    val mainDispatcherRule = MainDispatcherRule(StandardTestDispatcher())
 
     @Before
     fun setUp() {
@@ -29,7 +30,7 @@ class WarningMessageTest {
     }
 
     @Test
-    fun `setMessage clears message after timeout`() = runTest {
+    fun `setMessage clears message after timeout`() = runTest(mainDispatcherRule.dispatcher) {
         WarningMessage.setMessage("Mensagem")
 
         advanceTimeBy(1_000)
