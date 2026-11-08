@@ -2,8 +2,8 @@ package com.example.nexus.ui.ViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nexus.core.service.repository.local.ValidationError
-import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.framework.common.validation.ValidationError
+import com.example.nexus.framework.common.validation.InputValidation
 import com.example.nexus.framework.service.remote.repository.FirebaseAuthRepository
 import com.example.nexus.ui.states.ResetPasswordState
 import com.example.nexus.ui.until.WarningMessage

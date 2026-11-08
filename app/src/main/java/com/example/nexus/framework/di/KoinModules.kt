@@ -1,8 +1,6 @@
-package com.example.nexus.core.di
+package com.example.nexus.framework.di
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.nexus.framework.service.local.AppDatabase
@@ -15,7 +13,7 @@ import com.example.nexus.ui.ViewModels.SignInViewModel
 import com.example.nexus.ui.ViewModels.SignUpViewModel
 import com.example.nexus.ui.until.CryptoHelper
 import com.example.nexus.ui.until.UserPreferences
-import com.example.pwdcripto.framework.contants.ConstantsDatabase
+import com.example.nexus.framework.common.constants.ConstantsDatabase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.koin.android.ext.koin.androidContext
@@ -24,8 +22,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-
-@RequiresApi(Build.VERSION_CODES.R)
 // Módulo de ViewModels
 val viewModelModule = module {
     viewModelOf(::SignUpViewModel)
@@ -41,7 +37,7 @@ val securityModule = module {
 }
 
 // Módulo de armazenamento de dados
-val storangeModule = module {
+val storageModule = module {
     singleOf(::FirebaseAuthRepository)
 }
 

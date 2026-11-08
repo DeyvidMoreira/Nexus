@@ -1,8 +1,6 @@
 package com.example.nexus.ui.util
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -21,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.example.nexus.R
 import com.example.nexus.ui.until.BiometricPromptManager
 
-@RequiresApi(Build.VERSION_CODES.R)
 @SuppressLint("ContextCast", "ContextCastToActivity")
 @Composable
 fun BiometricAuth(

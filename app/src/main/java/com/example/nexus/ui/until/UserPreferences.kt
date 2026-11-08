@@ -1,6 +1,7 @@
 package com.example.nexus.ui.until
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -37,8 +38,7 @@ class UserPreferences(private val context: Context) {
 
     suspend fun savedUserCredentials(email: String, password: String) {
         try {
-            // Criptografa a senha corretamente
-            val encryptedPassword = cryptoHelper.encryptData(password)
+            val protectedPassword = cryptoHelper.encryptData(password)
 
             // Salva os dados no DataStore
             context.dataStore.edit { prefs ->
@@ -46,17 +46,10 @@ class UserPreferences(private val context: Context) {
                 prefs[REMEMBER_ME] = true
             }
 
-            cryptoHelper.saveEncryptedPassword("user_password", encryptedPassword)
-
-            // Verifique se os dados foram salvos corretamente
-            val savedEmail = getSavedEmail()
-            val savedPassword = getSavedPassword()
-            println("Saved Email: $savedEmail")
-            println("Saved Password: $savedPassword") // Deveria mostrar a senha descriptografada
+            cryptoHelper.saveEncryptedPassword("user_password", protectedPassword)
 
         } catch (e: Exception) {
-            // Lidar com erros de criptografia ou problemas no armazenamento
-            println("Erro ao salvar as credenciais: ${e.message}")
+            Log.e("UserPreferences", "Erro ao salvar credenciais do usuário", e)
         }
     }
 

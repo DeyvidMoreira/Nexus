@@ -7,7 +7,7 @@ import com.example.nexus.framework.service.remote.repository.FirebaseAuthReposit
 import com.example.nexus.ui.states.SignInState
 import com.example.nexus.ui.until.UserPreferences
 import com.example.nexus.ui.until.WarningMessage
-import com.example.pwdcripto.framework.contants.ConstantsMessages
+import com.example.nexus.framework.common.constants.ConstantsMessages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -1,7 +1,6 @@
 package com.example.nexus.ui.until
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -11,20 +10,27 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 
-@RequiresApi(Build.VERSION_CODES.R)
 class BiometricPromptManager(
     private val activity: AppCompatActivity
 ) {
     private val resultChannel = Channel<BiometricResult>(Channel.BUFFERED)
     val promptResult: Flow<BiometricResult> = resultChannel.receiveAsFlow()
 
+    private fun allowedAuthenticators(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG
+        }
+    }
+
     fun showBiometricPrompt(
         title: String,
         description: String
     ) {
         val manager = BiometricManager.from(activity)
-        val authenticators =
-            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        val authenticators = allowedAuthenticators()
 
         when (val can = manager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {

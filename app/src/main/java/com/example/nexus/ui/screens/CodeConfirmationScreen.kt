@@ -88,7 +88,6 @@ fun CodeConfirmationScreen(navController: NavController) {
                 )
                 ButtomCustom(
                     onClick = {
-                        println("botao clicado")
                     }
                 ) {
                     Text(text = stringResource(id = R.string.btn_confirm_code))

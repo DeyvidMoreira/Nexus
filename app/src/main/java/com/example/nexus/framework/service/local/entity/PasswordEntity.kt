@@ -2,7 +2,7 @@ package com.example.nexus.framework.service.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.pwdcripto.framework.contants.ConstantsDatabase
+import com.example.nexus.framework.common.constants.ConstantsDatabase
 
 
 @Entity(tableName = ConstantsDatabase.TABLE_NAME )

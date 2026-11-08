@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexus.R
-import com.example.nexus.core.service.repository.local.validationFields.InputValidation
+import com.example.nexus.framework.common.validation.InputValidation
 import com.example.nexus.ui.theme.DarkGrey
 import com.example.nexus.ui.theme.LightGreen
 import com.example.nexus.ui.theme.MatteGreen

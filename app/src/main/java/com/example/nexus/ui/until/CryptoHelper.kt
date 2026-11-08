@@ -6,7 +6,6 @@ import android.security.keystore.KeyProperties
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import android.util.Base64
-import android.util.Log
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -21,6 +20,7 @@ class CryptoHelper(context: Context) {
         private const val AES_MODE = "AES/GCM/NoPadding"
         private const val IV_SIZE = 12
         private const val KEY_SIZE = 256
+        private const val PROTECTED_VALUE_PREFIX = "v2:"
     }
 
     //Master key para SharedPreferences
@@ -83,19 +83,23 @@ class CryptoHelper(context: Context) {
         return String(cipher.doFinal(encryptedBytes), Charsets.UTF_8)
     }
 
-    //Criptografa SharedPreferences
+    // EncryptedSharedPreferences already encrypts the stored value.
     fun encryptData(value: String): String {
-        // Criptografa a senha e retorna a versão codificada em Base64
-        val encryptedValue = value.toByteArray(Charsets.UTF_8)
-        return Base64.encodeToString(encryptedValue, Base64.DEFAULT)
+        return PROTECTED_VALUE_PREFIX + value
     }
 
-    //Descriptografa SharedPreferences
+    // Recupera valores atuais e mantém compatibilidade com versões antigas em Base64.
     fun decryptData(key: String): String {
-        // Recupera e descriptografa a senha
-        val encryptedValue = encryptedPrefs.getString(key, "") ?: ""
-        val decodedBytes = Base64.decode(encryptedValue, Base64.DEFAULT)
-        return String(decodedBytes, Charsets.UTF_8)
+        val storedValue = encryptedPrefs.getString(key, "") ?: ""
+        if (storedValue.isEmpty()) return ""
+        if (storedValue.startsWith(PROTECTED_VALUE_PREFIX)) {
+            return storedValue.removePrefix(PROTECTED_VALUE_PREFIX)
+        }
+
+        return runCatching {
+            val decodedBytes = Base64.decode(storedValue, Base64.DEFAULT)
+            String(decodedBytes, Charsets.UTF_8)
+        }.getOrDefault(storedValue)
     }
 
     //Salva SharedPreferences
